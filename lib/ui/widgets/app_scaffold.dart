@@ -11,7 +11,7 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final audioProvider = Provider.of<AudioProvider>(context);
     final episode = audioProvider.currentEpisode;
-    final isPlaying = episode != null ? audioProvider.audioService.audioPlayer.playing : false;
+    final isPlaying = episode != null ? audioProvider.isPlaying : false;
     return Stack(
       children: [
         child,

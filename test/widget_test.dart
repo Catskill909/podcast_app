@@ -8,10 +8,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:podcast_app/main.dart';
 
+
+import 'package:podcast_app/core/services/audio_handler.dart';
+
+class MockPodcastAudioHandler extends PodcastAudioHandler {
+  MockPodcastAudioHandler() : super();
+}
+
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const PodcastApp());
+    // Provide a dummy handler for testing
+    await tester.pumpWidget(PodcastApp(audioHandler: MockPodcastAudioHandler()));
     // The rest of the test is default and can be updated for your app's widgets.
   });
 }

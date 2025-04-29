@@ -28,9 +28,22 @@ A modern, minimal, and slick Flutter podcasting app.
 - [`audio_session`](https://pub.dev/packages/audio_session): Audio focus and session management
 - [`provider`](https://pub.dev/packages/provider): State management
 - [`google_fonts`](https://pub.dev/packages/google_fonts): Dynamic font loading
+- [`audio_service`](https://pub.dev/packages/audio_service): **Background audio, lockscreen & notification controls, system/media button support**
 - [`cached_network_image`](https://pub.dev/packages/cached_network_image): Efficient image loading
 - [`shared_preferences`](https://pub.dev/packages/shared_preferences): Local storage for favorites
 - [`get_it`](https://pub.dev/packages/get_it): Dependency injection (optional, ready for scale)
+
+---
+
+## Background Audio & System Controls
+
+This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provide:
+- **True background audio playback** (audio continues when the app is minimized or device is locked)
+- **Lockscreen and notification controls** (play, pause, skip, seek, etc.)
+- **Rich metadata** (title, artist, artwork, playback position) sent to the OS
+- **Hardware/media button support** (headphones, car, Bluetooth)
+
+> These features are being actively integrated. See the Roadmap section for progress and planned enhancements.
 - [`flutter_hooks`](https://pub.dev/packages/flutter_hooks): Cleaner stateful widgets (optional)
 - [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons): App icon generation
 - [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash): Splash screen generation
@@ -59,7 +72,45 @@ A modern, minimal, and slick Flutter podcasting app.
 
 ---
 
+## Features
+
+- Background audio playback with lockscreen and notification controls (iOS & Android)
+- System/media hardware button support
+- Modern, accessible UI
+- Provider-based state management
+
+## Background Audio Setup (Platform Requirements)
+
+### iOS
+- `Info.plist` now includes:
+  - `<key>UIBackgroundModes</key>` with `<string>audio</string>`
+  - `NSMicrophoneUsageDescription` and `AVAudioSessionCategory` for playback
+- Audio continues when the app is backgrounded or device is locked
+
+### Android
+- `AndroidManifest.xml` now includes:
+  - `<uses-permission android:name="android.permission.WAKE_LOCK"/>`
+  - `<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>`
+  - `<service android:name="com.ryanheise.audioservice.AudioService" android:exported="false"/>`
+- Audio continues in background and is controllable from notifications
+
+## Architecture Notes
+- Audio logic is refactored to use a background `PodcastAudioHandler` via `audio_service` and `just_audio`.
+- UI and playback state are managed via `AudioProvider`.
+- All playback controls and seek bar now use provider streams and methods.
+
 ## Roadmap: Next Steps for a World-Class Podcast App
+
+### [In Progress] Background Audio & System Controls
+- Integrating [`audio_service`](https://pub.dev/packages/audio_service) for:
+  - True background playback
+  - Lockscreen & notification controls
+  - System/media hardware button support
+  - Sending rich metadata to OS
+- Refactoring audio logic to use a background audio handler
+
+---
+
 
 ### 1. Dark Mode Support
 - Implement a dark theme (ThemeData.dark) and allow users to toggle between light/dark/system mode.

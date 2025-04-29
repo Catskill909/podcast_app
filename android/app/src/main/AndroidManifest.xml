@@ -1,5 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:android="http://schemas.android.com/apk/res/android">
     <application
+    android:usesCleartextTraffic="true"
         android:label="podcast_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -30,7 +32,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
+        <service android:name="com.ryanheise.audioservice.AudioService"
+        android:exported="false"/>
+</application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.

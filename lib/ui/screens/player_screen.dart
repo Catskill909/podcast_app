@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/models/episode.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/audio_provider.dart';
-import 'package:just_audio/just_audio.dart';
 
 class PlayerScreen extends StatefulWidget {
   final Episode episode;
@@ -14,7 +13,6 @@ class PlayerScreen extends StatefulWidget {
 
 class _PlayerScreenState extends State<PlayerScreen> {
   late AudioProvider audioProvider;
-  late AudioPlayer player;
   bool isLoading = true;
 
   @override
@@ -23,8 +21,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       audioProvider = Provider.of<AudioProvider>(context, listen: false);
       audioProvider.setCurrentEpisode(widget.episode);
-      player = audioProvider.audioService.audioPlayer;
-      await audioProvider.audioService.setUrl(widget.episode.audioUrl);
       setState(() => isLoading = false);
     });
   }
@@ -48,56 +44,46 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   const SizedBox(height: 12),
                   Text(widget.episode.description, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
                   const SizedBox(height: 32),
-                  StreamBuilder<PlayerState>(
-                    stream: player.playerStateStream,
-                    builder: (context, snapshot) {
-                      final state = snapshot.data;
-                      final playing = state?.playing ?? false;
-                      final processing = state?.processingState == ProcessingState.loading || state?.processingState == ProcessingState.buffering;
+                  Consumer<AudioProvider>(
+                    builder: (context, audioProvider, child) {
+                      final isPlaying = audioProvider.isPlaying;
+                      final position = audioProvider.position;
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.replay_10),
                             iconSize: 36,
-                            onPressed: () => player.seek(player.position - const Duration(seconds: 10)),
+                            onPressed: () => audioProvider.seek(position - const Duration(seconds: 10)),
                           ),
                           const SizedBox(width: 24),
                           IconButton(
-                            icon: Icon(
-                              processing
-                                  ? Icons.hourglass_empty
-                                  : (playing ? Icons.pause_circle_filled : Icons.play_circle_fill),
-                              size: 56,
-                            ),
+                            icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill, size: 56),
                             iconSize: 56,
-                            onPressed: processing
-                                ? null
-                                : () => playing ? player.pause() : player.play(),
+                            onPressed: () => isPlaying ? audioProvider.pause() : audioProvider.play(),
                           ),
                           const SizedBox(width: 24),
                           IconButton(
                             icon: const Icon(Icons.forward_10),
                             iconSize: 36,
-                            onPressed: () => player.seek(player.position + const Duration(seconds: 10)),
+                            onPressed: () => audioProvider.seek(position + const Duration(seconds: 10)),
                           ),
                         ],
                       );
                     },
                   ),
                   const SizedBox(height: 24),
-                  StreamBuilder<Duration?>(
-                    stream: player.positionStream,
-                    builder: (context, snapshot) {
-                      final position = snapshot.data ?? Duration.zero;
-                      final total = player.duration ?? widget.episode.duration;
+                  Consumer<AudioProvider>(
+                    builder: (context, audioProvider, child) {
+                      final position = audioProvider.position;
+                      final total = widget.episode.duration;
                       return Column(
                         children: [
                           Slider(
                             value: position.inSeconds.toDouble(),
                             min: 0,
                             max: total.inSeconds.toDouble(),
-                            onChanged: (value) => player.seek(Duration(seconds: value.toInt())),
+                            onChanged: (value) => audioProvider.seek(Duration(seconds: value.toInt())),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
