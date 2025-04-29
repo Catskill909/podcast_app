@@ -3,8 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/providers/audio_provider.dart';
 import 'core/services/audio_handler.dart';
+import 'core/models/podcast.dart';
 import 'ui/screens/splash_screen.dart';
 import 'ui/screens/home_screen.dart';
+import 'ui/screens/podcast_detail_screen.dart';
+import 'ui/screens/player_screen.dart';
+import 'core/models/episode.dart';
+import 'ui/widgets/app_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +73,15 @@ class PodcastApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
-          '/home': (context) => HomeScreen(),
+          '/home': (context) => AppScaffold(child: HomeScreen()),
+          '/podcast': (context) {
+            final podcast = ModalRoute.of(context)!.settings.arguments as Podcast;
+            return AppScaffold(child: PodcastDetailScreen(podcast: podcast));
+          },
+          '/player': (context) {
+            final episode = ModalRoute.of(context)!.settings.arguments as Episode;
+            return AppScaffold(child: PlayerScreen(episode: episode));
+          },
         },
         // onGenerateRoute: AppRouter.generateRoute,
         debugShowCheckedModeBanner: false,

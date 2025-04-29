@@ -65,15 +65,26 @@ class PodcastDrawer extends StatelessWidget {
                       ),
                     ),
                     ListTile(
-                      leading: const Icon(Icons.privacy_tip_outlined),
+                      leading: const Icon(Icons.info_outline),
                       title: Text(
-                        'Privacy Policy',
+                        'About Pacifica',
                         style: GoogleFonts.oswald(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),
                       ),
-                      onTap: () => _launchURL('https://yourdomain.com/privacy'),
+                      onTap: () => _launchURL('https://yourdomain.com'),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.mail_outline),
+                      title: Text(
+                        'Contact Us',
+                        style: GoogleFonts.oswald(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onTap: () => _launchURL('https://yourdomain.com'),
                     ),
                     ListTile(
                       leading: const Icon(Icons.link_outlined),
@@ -92,42 +103,59 @@ class PodcastDrawer extends StatelessWidget {
               ),
               SafeArea(
                 bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 120.0, left: 12.0, right: 12.0, top: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SocialCircleButton(
-                        icon: FontAwesomeIcons.facebookF,
-                        onTap: () => _launchURL('https://facebook.com/yourpage'),
-                        size: 36.0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0, left: 12.0, right: 12.0, top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SocialCircleButton(
+                            icon: FontAwesomeIcons.facebookF,
+                            onTap: () => _launchURL('https://facebook.com/yourpage'),
+                            size: 36.0,
+                          ),
+                          const SizedBox(width: 16),
+                          SocialCircleButton(
+                            icon: FontAwesomeIcons.instagram,
+                            onTap: () => _launchURL('https://instagram.com/yourpage'),
+                            size: 36.0,
+                          ),
+                          const SizedBox(width: 16),
+                          SocialCircleButton(
+                            icon: FontAwesomeIcons.twitter,
+                            onTap: () => _launchURL('https://twitter.com/yourpage'),
+                            size: 36.0,
+                          ),
+                          const SizedBox(width: 16),
+                          SocialCircleButton(
+                            icon: FontAwesomeIcons.youtube,
+                            onTap: () => _launchURL('https://youtube.com/yourpage'),
+                            size: 36.0,
+                          ),
+                          const SizedBox(width: 16),
+                          SocialCircleButton(
+                            icon: Icons.email_outlined,
+                            onTap: () => _launchURL('mailto:your@email.com'),
+                            size: 36.0,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      SocialCircleButton(
-                        icon: FontAwesomeIcons.instagram,
-                        onTap: () => _launchURL('https://instagram.com/yourpage'),
-                        size: 36.0,
+                    ),
+                    Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.privacy_tip_outlined),
+                      title: Text(
+                        'Privacy Policy',
+                        style: GoogleFonts.oswald(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
                       ),
-                      const SizedBox(width: 16),
-                      SocialCircleButton(
-                        icon: FontAwesomeIcons.twitter,
-                        onTap: () => _launchURL('https://twitter.com/yourpage'),
-                        size: 36.0,
-                      ),
-                      const SizedBox(width: 16),
-                      SocialCircleButton(
-                        icon: FontAwesomeIcons.youtube,
-                        onTap: () => _launchURL('https://youtube.com/yourpage'),
-                        size: 36.0,
-                      ),
-                      const SizedBox(width: 16),
-                      SocialCircleButton(
-                        icon: Icons.email_outlined,
-                        onTap: () => _launchURL('mailto:your@email.com'),
-                        size: 36.0,
-                      ),
-                    ],
-                  ),
+                      onTap: () => _launchURL('https://yourdomain.com/privacy'),
+                    ),
+                  ],
                 ),
               ),
             ],
