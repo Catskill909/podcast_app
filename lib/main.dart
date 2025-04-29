@@ -29,11 +29,42 @@ class PodcastApp extends StatelessWidget {
       },
       child: MaterialApp(
         title: 'Podcast App',
-        theme: ThemeData(
+        // Light theme
+        theme: ThemeData.light().copyWith(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          fontFamily: GoogleFonts.roboto().fontFamily,
+          textTheme: GoogleFonts.nunitoTextTheme().copyWith(
+            titleLarge: GoogleFonts.oswald(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: Colors.black,
+            ),
+            titleMedium: GoogleFonts.oswald(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.black,
+            ),
+          ),
         ),
+        // Dark theme
+        darkTheme: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.dark,
+          ),
+          textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme).copyWith(
+            titleLarge: GoogleFonts.oswald(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: Colors.white,
+            ),
+            titleMedium: GoogleFonts.oswald(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        themeMode: ThemeMode.system, // Follows system setting for light/dark
         initialRoute: '/',
         onGenerateRoute: AppRouter.generateRoute,
         debugShowCheckedModeBanner: false,
@@ -41,4 +72,3 @@ class PodcastApp extends StatelessWidget {
     );
   }
 }
-

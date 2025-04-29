@@ -72,32 +72,13 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ---
 
-## Features
+## Today's Session Summary (2025-04-28)
 
-- Background audio playback with lockscreen and notification controls (iOS & Android)
-- System/media hardware button support
-- Modern, accessible UI
-- Provider-based state management
-
-## Background Audio Setup (Platform Requirements)
-
-### iOS
-- `Info.plist` now includes:
-  - `<key>UIBackgroundModes</key>` with `<string>audio</string>`
-  - `NSMicrophoneUsageDescription` and `AVAudioSessionCategory` for playback
-- Audio continues when the app is backgrounded or device is locked
-
-### Android
-- `AndroidManifest.xml` now includes:
-  - `<uses-permission android:name="android.permission.WAKE_LOCK"/>`
-  - `<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>`
-  - `<service android:name="com.ryanheise.audioservice.AudioService" android:exported="false"/>`
-- Audio continues in background and is controllable from notifications
-
-## Architecture Notes
-- Audio logic is refactored to use a background `PodcastAudioHandler` via `audio_service` and `just_audio`.
-- UI and playback state are managed via `AudioProvider`.
-- All playback controls and seek bar now use provider streams and methods.
+- Enabled full dark mode support (auto, system-based)
+- Floating mini player background now adapts to dark mode
+- Customized app typography: Oswald bold for headers, Nunito for body text
+- Investigated scrubber/slider UX and clarified placeholder audio duration behavior
+- General theme and UI polish
 
 ## Roadmap: Next Steps for a World-Class Podcast App
 
@@ -109,11 +90,8 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
   - Sending rich metadata to OS
 - Refactoring audio logic to use a background audio handler
 
----
-
-
 ### 1. Dark Mode Support
-- Implement a dark theme (ThemeData.dark) and allow users to toggle between light/dark/system mode.
+- **Completed**: Implement a dark theme (ThemeData.dark) and allow users to toggle between light/dark/system mode.
 
 ### 2. Background Audio & Audio Services
 - Integrate [`audio_service`](https://pub.dev/packages/audio_service) alongside `just_audio` and `audio_session`.
@@ -130,7 +108,13 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Skip/replay (customizable skip intervals).
 - Sleep timer.
 - Download for offline listening.
-- Playlist/queue management.
+- Playlist/queue management (episode queue, smart playlists, auto-play next).
+- Bookmarks and resume playback per episode.
+- Mini-player improvements for navigation and quick controls.
+- Enhanced notification controls (show artwork, more actions).
+- Android 13+ notification permissions and compatibility.
+- CI/CD pipeline for automated tests and builds.
+- App Store/Play Store release prep (icons, splash screens, privacy, changelog).
 - Smart resume and “continue listening.”
 - Chapter support and rich episode metadata.
 - Hardware/media button support (headphones, car, etc.).

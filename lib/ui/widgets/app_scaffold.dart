@@ -26,7 +26,7 @@ class AppScaffold extends StatelessWidget {
                 child: Material(
                   elevation: 8,
                   borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   child: SizedBox(
                     height: 56,
                     child: MiniPlayer(

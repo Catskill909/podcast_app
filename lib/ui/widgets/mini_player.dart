@@ -16,7 +16,7 @@ class MiniPlayer extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: Colors.grey[200],
+        color: Theme.of(context).colorScheme.surface,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
