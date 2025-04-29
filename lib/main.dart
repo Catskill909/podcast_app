@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/providers/audio_provider.dart';
 import 'core/services/audio_handler.dart';
-import 'ui/navigation/app_router.dart';
+import 'ui/screens/splash_screen.dart';
+import 'ui/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +66,11 @@ class PodcastApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.system, // Follows system setting for light/dark
         initialRoute: '/',
-        onGenerateRoute: AppRouter.generateRoute,
+        routes: {
+          '/': (context) => const SplashScreen(),
+          '/home': (context) => HomeScreen(),
+        },
+        // onGenerateRoute: AppRouter.generateRoute,
         debugShowCheckedModeBanner: false,
       ),
     );

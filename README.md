@@ -17,6 +17,7 @@ A modern, minimal, and slick Flutter podcasting app.
 - **Favorites (stub):** Local storage service ready for favorites/bookmarks
 - **Navigation:** Clean, named routing via AppRouter
 - **Splash Screen & Launcher Icons:** Automated branding for Android/iOS
+- **Interim Dart Splash:** Custom Dart splash screen for a seamless transition after the native splash, matching icon size and background for a professional look
 - **Google Fonts:** No manual font assets required
 - **Ready for API:** PodcastApiService is abstracted for easy backend integration
 
