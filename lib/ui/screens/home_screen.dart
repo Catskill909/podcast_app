@@ -23,7 +23,8 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final podcast = podcasts[index];
               return ListTile(
-                leading: CircleAvatar(backgroundImage: NetworkImage(podcast.imageUrl)),
+                leading: CircleAvatar(
+                    backgroundImage: NetworkImage(podcast.imageUrl)),
                 title: Text(podcast.title),
                 subtitle: Text(podcast.author),
                 onTap: () {

@@ -24,7 +24,7 @@ class AudioProvider extends ChangeNotifier {
       album: '',
       artist: '',
       duration: episode.duration,
-      artUri: null,
+      artUri: Uri.parse('asset:assets/images/icon.png'),
       extras: {'episodeId': episode.id},
     );
     await audioHandler.playMediaItem(mediaItem);

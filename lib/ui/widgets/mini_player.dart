@@ -22,7 +22,9 @@ class MiniPlayer extends StatelessWidget {
           children: [
             Icon(isPlaying ? Icons.pause : Icons.play_arrow),
             const SizedBox(width: 12),
-            Expanded(child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis)),
+            Expanded(
+                child:
+                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis)),
             const Icon(Icons.chevron_right),
           ],
         ),

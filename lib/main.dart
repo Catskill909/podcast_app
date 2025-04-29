@@ -13,8 +13,6 @@ void main() async {
 
 // AppScaffold moved to its own file
 
-
-
 class PodcastApp extends StatelessWidget {
   final PodcastAudioHandler audioHandler;
   const PodcastApp({required this.audioHandler, super.key});
@@ -51,7 +49,8 @@ class PodcastApp extends StatelessWidget {
             seedColor: Colors.deepPurple,
             brightness: Brightness.dark,
           ),
-          textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme).copyWith(
+          textTheme:
+              GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme).copyWith(
             titleLarge: GoogleFonts.oswald(
               fontWeight: FontWeight.bold,
               fontSize: 22,
