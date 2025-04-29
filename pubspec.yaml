@@ -1,0 +1,45 @@
+name: podcast_app
+description: A modern, minimal, and slick Flutter podcasting app.
+version: 1.0.0+1
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  just_audio: ^0.9.36
+  audio_session: ^0.1.13
+  provider: ^6.0.5
+  http: ^1.1.0
+  cached_network_image: ^3.3.0
+  shared_preferences: ^2.1.1
+  get_it: ^7.6.0
+  flutter_hooks: ^0.20.4
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/audio/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/icon.png"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/icon.png
+  android: true
+  ios: true
+  web: false
