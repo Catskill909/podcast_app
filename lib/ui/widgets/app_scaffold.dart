@@ -22,7 +22,7 @@ class AppScaffold extends StatelessWidget {
             bottom: 0,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: Material(
                   elevation: 8,
                   borderRadius: BorderRadius.circular(16),
