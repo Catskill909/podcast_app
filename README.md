@@ -80,13 +80,7 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Investigated scrubber/slider UX and clarified placeholder audio duration behavior
 - General theme and UI polish
 
-## Roadmap: Next Steps for a World-Class Podcast App
-
-### [In Progress] Background Audio & System Controls
-- Integrating [`audio_service`](https://pub.dev/packages/audio_service) for:
-  - True background playback
-  - Lockscreen & notification controls
-  - System/media hardware button support
+## Roadmap / Possible Future Developments for a World-Class Podcast App
   - Sending rich metadata to OS
 - Refactoring audio logic to use a background audio handler
 
