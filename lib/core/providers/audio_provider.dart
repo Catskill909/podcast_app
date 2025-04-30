@@ -27,7 +27,8 @@ class AudioProvider extends ChangeNotifier {
       artUri: Uri.parse('asset:assets/images/icon.png'),
       extras: {'episodeId': episode.id},
     );
-    await audioHandler.playMediaItem(mediaItem);
+    // Changed from playMediaItem to loadMediaItem to prevent auto-play
+    await audioHandler.loadMediaItem(mediaItem);
     notifyListeners();
   }
 
@@ -38,6 +39,4 @@ class AudioProvider extends ChangeNotifier {
 
   bool get isPlaying => audioHandler.playbackState.value.playing;
   Duration get position => audioHandler.playbackState.value.updatePosition;
-
-
 }

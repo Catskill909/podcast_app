@@ -26,6 +26,13 @@ class PodcastAudioHandler extends BaseAudioHandler with SeekHandler {
     await _player.play();
   }
 
+  // Load a media item without starting playback
+  Future<void> loadMediaItem(MediaItem mediaItem) async {
+    this.mediaItem.add(mediaItem);
+    await _player.setUrl(mediaItem.id);
+    // Note: _player.play() is intentionally omitted here
+  }
+
   @override
   Future<void> play() => _player.play();
   @override

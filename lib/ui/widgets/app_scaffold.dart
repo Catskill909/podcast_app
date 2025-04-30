@@ -24,7 +24,8 @@ class AppScaffold extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Color.alphaBlend(
                       Colors.white.withAlpha((0.07 * 255).round()),
@@ -51,8 +52,20 @@ class AppScaffold extends StatelessWidget {
                       child: MiniPlayer(
                         title: episode.title,
                         isPlaying: isPlaying,
+                        // Added callback for the new IconButton in MiniPlayer
+                        onPlayPauseTap: () {
+                          // Get the provider instance
+                          final audioProvider = context.read<AudioProvider>();
+                          // Check current state and call appropriate method
+                          if (audioProvider.isPlaying) {
+                            audioProvider.pause();
+                          } else {
+                            audioProvider.play();
+                          }
+                        },
                         onTap: () {
-                          Navigator.of(context).pushNamed('/player', arguments: episode);
+                          Navigator.of(context)
+                              .pushNamed('/player', arguments: episode);
                         },
                       ),
                     ),

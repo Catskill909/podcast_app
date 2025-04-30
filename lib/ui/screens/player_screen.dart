@@ -20,7 +20,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       audioProvider = Provider.of<AudioProvider>(context, listen: false);
-      audioProvider.setCurrentEpisode(widget.episode);
+      // Check if the episode being loaded is different from the current one
+      if (audioProvider.currentEpisode?.id != widget.episode.id) {
+        // Only set (and auto-play) if it's a new/different episode
+        audioProvider.setCurrentEpisode(widget.episode);
+      }
+      // If it's the same episode, do nothing here to preserve existing play/pause state.
       setState(() => isLoading = false);
     });
   }
@@ -38,11 +43,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.podcasts, size: 80, color: theme.colorScheme.primary),
+                  Icon(Icons.podcasts,
+                      size: 80, color: theme.colorScheme.primary),
                   const SizedBox(height: 32),
-                  Text(widget.episode.title, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+                  Text(widget.episode.title,
+                      style: theme.textTheme.titleLarge,
+                      textAlign: TextAlign.center),
                   const SizedBox(height: 12),
-                  Text(widget.episode.description, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+                  Text(widget.episode.description,
+                      style: theme.textTheme.bodyMedium,
+                      textAlign: TextAlign.center),
                   const SizedBox(height: 32),
                   Consumer<AudioProvider>(
                     builder: (context, audioProvider, child) {
@@ -54,19 +64,27 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           IconButton(
                             icon: const Icon(Icons.replay_10),
                             iconSize: 36,
-                            onPressed: () => audioProvider.seek(position - const Duration(seconds: 10)),
+                            onPressed: () => audioProvider
+                                .seek(position - const Duration(seconds: 10)),
                           ),
                           const SizedBox(width: 24),
                           IconButton(
-                            icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill, size: 56),
+                            icon: Icon(
+                                isPlaying
+                                    ? Icons.pause_circle_filled
+                                    : Icons.play_circle_fill,
+                                size: 56),
                             iconSize: 56,
-                            onPressed: () => isPlaying ? audioProvider.pause() : audioProvider.play(),
+                            onPressed: () => isPlaying
+                                ? audioProvider.pause()
+                                : audioProvider.play(),
                           ),
                           const SizedBox(width: 24),
                           IconButton(
                             icon: const Icon(Icons.forward_10),
                             iconSize: 36,
-                            onPressed: () => audioProvider.seek(position + const Duration(seconds: 10)),
+                            onPressed: () => audioProvider
+                                .seek(position + const Duration(seconds: 10)),
                           ),
                         ],
                       );
@@ -83,7 +101,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             value: position.inSeconds.toDouble(),
                             min: 0,
                             max: total.inSeconds.toDouble(),
-                            onChanged: (value) => audioProvider.seek(Duration(seconds: value.toInt())),
+                            onChanged: (value) => audioProvider
+                                .seek(Duration(seconds: value.toInt())),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,4 +127,3 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return '$minutes:$seconds';
   }
 }
-
