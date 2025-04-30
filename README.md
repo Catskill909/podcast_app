@@ -26,13 +26,20 @@ A modern, minimal, and slick Flutter podcasting app.
 ## Packages Used
 
 - [`just_audio`](https://pub.dev/packages/just_audio): Audio playback
+- [`audio_service`](https://pub.dev/packages/audio_service): Background audio, lockscreen & notification controls, system/media button support
 - [`audio_session`](https://pub.dev/packages/audio_session): Audio focus and session management
 - [`provider`](https://pub.dev/packages/provider): State management
 - [`google_fonts`](https://pub.dev/packages/google_fonts): Dynamic font loading
-- [`audio_service`](https://pub.dev/packages/audio_service): **Background audio, lockscreen & notification controls, system/media button support**
 - [`cached_network_image`](https://pub.dev/packages/cached_network_image): Efficient image loading
 - [`shared_preferences`](https://pub.dev/packages/shared_preferences): Local storage for favorites
-- [`get_it`](https://pub.dev/packages/get_it): Dependency injection (optional, ready for scale)
+- [`get_it`](https://pub.dev/packages/get_it): Dependency injection
+- [`flutter_hooks`](https://pub.dev/packages/flutter_hooks): Cleaner stateful widgets
+- [`url_launcher`](https://pub.dev/packages/url_launcher): URL handling and external link support
+- [`flutter_social_button`](https://pub.dev/packages/flutter_social_button): Social media sharing buttons
+- [`font_awesome_flutter`](https://pub.dev/packages/font_awesome_flutter): Icon set for UI elements
+- [`http`](https://pub.dev/packages/http): API calls (for future backend)
+- `flutter_launcher_icons`: App icon generation
+- `flutter_native_splash`: Splash screen generation
 
 ---
 
@@ -45,10 +52,6 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - **Hardware/media button support** (headphones, car, Bluetooth)
 
 > These features are being actively integrated. See the Roadmap section for progress and planned enhancements.
-- [`flutter_hooks`](https://pub.dev/packages/flutter_hooks): Cleaner stateful widgets (optional)
-- [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons): App icon generation
-- [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash): Splash screen generation
-- [`http`](https://pub.dev/packages/http): API calls (for future backend)
 
 ---
 
