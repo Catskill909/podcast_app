@@ -23,18 +23,38 @@ class AppScaffold extends StatelessWidget {
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                child: Material(
-                  elevation: 8,
-                  borderRadius: BorderRadius.circular(16),
-                  color: Theme.of(context).colorScheme.surface,
-                  child: SizedBox(
-                    height: 56,
-                    child: MiniPlayer(
-                      title: episode.title,
-                      isPlaying: isPlaying,
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/player', arguments: episode);
-                      },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Color.alphaBlend(
+                      Colors.white.withOpacity(0.07),
+                      Theme.of(context).colorScheme.background,
+                    ),
+                    border: Border.all(
+                      color: Colors.white.withAlpha(46),
+                      width: 1.2,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.32),
+                        blurRadius: 18,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox(
+                      height: 56,
+                      child: MiniPlayer(
+                        title: episode.title,
+                        isPlaying: isPlaying,
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/player', arguments: episode);
+                        },
+                      ),
                     ),
                   ),
                 ),
