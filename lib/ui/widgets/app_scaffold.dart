@@ -27,8 +27,8 @@ class AppScaffold extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Color.alphaBlend(
-                      Colors.white.withOpacity(0.07),
-                      Theme.of(context).colorScheme.background,
+                      Colors.white.withAlpha((0.07 * 255).round()),
+                      Theme.of(context).colorScheme.surface,
                     ),
                     border: Border.all(
                       color: Colors.white.withAlpha(46),
@@ -37,9 +37,9 @@ class AppScaffold extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.32),
+                        color: Colors.black.withAlpha((0.32 * 255).round()),
                         blurRadius: 18,
-                        offset: Offset(0, 6),
+                        offset: const Offset(0, 6),
                       ),
                     ],
                   ),

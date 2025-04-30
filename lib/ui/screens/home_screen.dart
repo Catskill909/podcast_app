@@ -41,7 +41,15 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           final podcasts = snapshot.data!;
-          return ListView.builder(
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Podcasts', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
             itemCount: podcasts.length,
             itemBuilder: (context, index) {
               final podcast = podcasts[index];
@@ -60,6 +68,10 @@ class HomeScreen extends StatelessWidget {
                 },
               );
             },
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
