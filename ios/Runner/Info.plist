@@ -11,6 +11,7 @@
 		<key>AVAudioSessionCategory</key>
 		<string>playback</string>
 		<key>CFBundleDevelopmentRegion</key>
+<string>$(DEVELOPMENT_LANGUAGE)</string>
 <key>UIRequiresFullScreen</key>
 <true/>
 <key>UISupportedInterfaceOrientations</key>
@@ -26,9 +27,7 @@
 	<string>UIInterfaceOrientationLandscapeLeft</string>
 	<string>UIInterfaceOrientationLandscapeRight</string>
 </array>
-
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
+<key>CFBundleDisplayName</key>
 		<string>Podcast App</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
