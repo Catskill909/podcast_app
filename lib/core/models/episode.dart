@@ -4,6 +4,7 @@ class Episode {
   final String audioUrl;
   final String description;
   final Duration duration;
+  final String podcastImageUrl;
 
   Episode({
     required this.id,
@@ -11,5 +12,6 @@ class Episode {
     required this.audioUrl,
     required this.description,
     required this.duration,
+    required this.podcastImageUrl,
   });
 }

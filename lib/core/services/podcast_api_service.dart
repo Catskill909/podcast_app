@@ -19,6 +19,7 @@ class PodcastApiService {
             audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
             description: 'Introduction to minimalism.',
             duration: Duration(minutes: 30),
+            podcastImageUrl: 'https://picsum.photos/200',
           ),
         ],
       ),

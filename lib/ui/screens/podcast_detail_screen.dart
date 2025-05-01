@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/models/podcast.dart';
+import '../../core/models/episode.dart';
 
 class PodcastDetailScreen extends StatelessWidget {
   final Podcast podcast;
@@ -38,7 +39,14 @@ class PodcastDetailScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         '/player',
-                        arguments: episode,
+                        arguments: Episode(
+                          id: episode.id,
+                          title: episode.title,
+                          audioUrl: episode.audioUrl,
+                          description: episode.description,
+                          duration: episode.duration,
+                          podcastImageUrl: podcast.imageUrl,
+                        ),
                       );
                     },
                   );

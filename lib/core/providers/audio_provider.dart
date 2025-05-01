@@ -24,7 +24,7 @@ class AudioProvider extends ChangeNotifier {
       album: '',
       artist: '',
       duration: episode.duration,
-      artUri: Uri.parse('asset:assets/images/icon.png'),
+      artUri: Uri.parse(episode.podcastImageUrl),
       extras: {'episodeId': episode.id},
     );
     // Changed from playMediaItem to loadMediaItem to prevent auto-play
