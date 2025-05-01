@@ -51,7 +51,7 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - **Rich metadata** (title, artist, artwork, playback position) sent to the OS
 - **Hardware/media button support** (headphones, car, Bluetooth)
 
-> These features are being actively integrated. See the Roadmap section for progress and planned enhancements.
+> These features are fully implemented.
 
 ---
 
@@ -92,15 +92,39 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - **Completed**: Implement a dark theme (ThemeData.dark) and allow users to toggle between light/dark/system mode.
 
 ### 2. Background Audio & Audio Services
-- Integrate [`audio_service`](https://pub.dev/packages/audio_service) alongside `just_audio` and `audio_session`.
-- Enable true background playback (audio keeps playing when the app is minimized or the screen is off).
-- Handle audio focus, interruptions, and phone call events.
+- **Completed**: [`audio_service`](https://pub.dev/packages/audio_service) is integrated alongside `just_audio` and `audio_session`.
+- **Completed**: True background playback (audio keeps playing when the app is minimized or the screen is off).
+- **Completed**: Handles audio focus, interruptions, and phone call events.
 
 ### 3. Lockscreen & Status Bar Controls
 - Send podcast metadata (title, artist, artwork, position, etc.) to the OS for display on the lockscreen and system notification.
 - Support lockscreen controls: play, pause, skip, seek, etc.
 - Show playback progress and allow user interaction from outside the app.
 
+---
+## Standard Podcast App UI Pattern: Resume Playback
+
+1. **Auto-resume silently (for ongoing playback or recent episodes):**
+   - When a user navigates back to the same episode, the app automatically resumes from where they left off, without asking.
+   - The scrubber (seek bar) reflects the last position.
+   - Common in: Spotify, Apple Podcasts, Pocket Casts
+
+2. **Prompt with "Resume or Start Over" (if position is old or episode changed):**
+   - If the user hasn’t listened in a while, or the episode is long:
+   - A prompt like:
+     > “Resume from 12:43?”  
+     > ▶️ Resume | ⏪ Start Over
+   - Some apps show a mini progress bar under each episode in the list, indicating how much has been listened.
+
+3. **Progress tracking per episode:**
+   - The app saves playback position per episode.
+   - When an episode is fully played, it’s marked as "played", and progress resets.
+
+4. **UI elements typically used:**
+   - Progress bar / scrubber: shows current position.
+   - Timestamp indicator: e.g., "Last played at 12:43".
+   - "Resume playing" button on episode screen or player.
+   - Episode list UI with progress bar under titles.
 ### 4. Standard Audio Features for Modern Podcast Apps
 - Playback speed control.
 - Skip/replay (customizable skip intervals).
@@ -129,12 +153,12 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 ## Possible Future Development
 
 - **Lockscreen & Status Bar Metadata:**
-  - Display podcast title, episode, artwork, and playback controls on lockscreen and notification area (using just_audio + audio_session + [audio_service](https://pub.dev/packages/audio_service)).
-  - Show playback progress and allow play/pause/seek from lockscreen or notification.
+  - **Completed**: Podcast title, episode, artwork, and playback controls are shown on lockscreen and notification area (using just_audio + audio_session + [audio_service](https://pub.dev/packages/audio_service)).
+  - **Completed**: Playback progress and play/pause/seek from lockscreen or notification.
 - **Background Playback:**
-  - Full support for audio playback when app is in the background (audio_service integration).
+  - **Completed**: Full support for audio playback when app is in the background (audio_service integration).
 - **Media Controls Integration:**
-  - Handle hardware/media buttons (play/pause/skip) from headphones, car, or device.
+  - **Completed**: Handles hardware/media buttons (play/pause/skip) from headphones, car, or device.
 - **Playback Speed & Skip Controls:**
   - Variable playback speed, skip intro/outro, rewind/forward buttons.
 - **Podcast Downloads:**
