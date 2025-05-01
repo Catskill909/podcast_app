@@ -57,7 +57,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   Consumer<AudioProvider>(
                     builder: (context, audioProvider, child) {
                       final isPlaying = audioProvider.isPlaying;
-                      final position = audioProvider.position;
+                      final isCompleted = audioProvider.isCompleted;
+                      final position = isCompleted ? Duration.zero : audioProvider.position;
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -70,14 +71,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           const SizedBox(width: 24),
                           IconButton(
                             icon: Icon(
-                                isPlaying
-                                    ? Icons.pause_circle_filled
-                                    : Icons.play_circle_fill,
+                                isCompleted || !isPlaying
+                                    ? Icons.play_circle_fill
+                                    : Icons.pause_circle_filled,
                                 size: 56),
                             iconSize: 56,
-                            onPressed: () => isPlaying
-                                ? audioProvider.pause()
-                                : audioProvider.play(),
+                            onPressed: () => (isCompleted || !isPlaying)
+                                ? audioProvider.play()
+                                : audioProvider.pause(),
                           ),
                           const SizedBox(width: 24),
                           IconButton(
@@ -103,7 +104,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         stream: audioProvider.positionStream,
                         initialData: audioProvider.position,
                         builder: (context, snapshot) {
-                          final position = snapshot.data ?? Duration.zero;
+                          final isCompleted = audioProvider.isCompleted;
+                          final position = isCompleted ? Duration.zero : (snapshot.data ?? Duration.zero);
                           return Column(
                             children: [
                               Slider(

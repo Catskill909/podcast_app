@@ -19,6 +19,16 @@ class PodcastAudioHandler extends BaseAudioHandler with SeekHandler {
 
     // Listen for duration changes and update MediaItem
     _player.durationStream.listen(_updateMediaItemDuration);
+
+    // Listen for completion and reset state
+    _player.playerStateStream.listen((state) async {
+      if (state.processingState == ProcessingState.completed) {
+        await _player.seek(Duration.zero);
+        await _player.pause();
+        // Optionally, broadcast state again if needed
+        _broadcastState(null);
+      }
+    });
   }
 
   // Update MediaItem with the actual duration from the player

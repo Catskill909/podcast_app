@@ -41,4 +41,13 @@ class AudioProvider extends ChangeNotifier {
   Duration get position => audioHandler.playbackState.value.updatePosition;
   // Expose a stream of the current playback position for real-time tracking
   Stream<Duration> get positionStream => audioHandler.player.positionStream;
+
+  // Expose if playback is completed and at end
+  bool get isCompleted {
+    final state = audioHandler.playbackState.value;
+    final media = audioHandler.mediaItem.value;
+    return state.processingState == AudioProcessingState.completed ||
+      (media != null && position >= (media.duration ?? Duration.zero) && !isPlaying);
+  }
+
 }
