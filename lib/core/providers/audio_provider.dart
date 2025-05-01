@@ -39,4 +39,6 @@ class AudioProvider extends ChangeNotifier {
 
   bool get isPlaying => audioHandler.playbackState.value.playing;
   Duration get position => audioHandler.playbackState.value.updatePosition;
+  // Expose a stream of the current playback position for real-time tracking
+  Stream<Duration> get positionStream => audioHandler.player.positionStream;
 }

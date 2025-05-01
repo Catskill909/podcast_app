@@ -16,19 +16,38 @@ class PodcastAudioHandler extends BaseAudioHandler with SeekHandler {
 
     // Listen to playback events and broadcast state/metadata
     _player.playbackEventStream.listen(_broadcastState);
+
+    // Listen for duration changes and update MediaItem
+    _player.durationStream.listen(_updateMediaItemDuration);
+  }
+
+  // Update MediaItem with the actual duration from the player
+  void _updateMediaItemDuration(Duration? playerDuration) {
+    final currentItem = mediaItem.value;
+    // Only update if duration is valid and different from current MediaItem
+    if (playerDuration != null &&
+        currentItem != null &&
+        playerDuration != currentItem.duration) {
+      final updatedItem = currentItem.copyWith(duration: playerDuration);
+      mediaItem.add(updatedItem);
+    }
   }
 
   // Play a media item (episode)
   @override
   Future<void> playMediaItem(MediaItem mediaItem) async {
+    // Add initial item (duration might be inaccurate)
     this.mediaItem.add(mediaItem);
+    // Set URL and let durationStream listener update the item later
     await _player.setUrl(mediaItem.id);
     await _player.play();
   }
 
   // Load a media item without starting playback
   Future<void> loadMediaItem(MediaItem mediaItem) async {
+    // Add initial item (duration might be inaccurate)
     this.mediaItem.add(mediaItem);
+    // Set URL and let durationStream listener update the item later
     await _player.setUrl(mediaItem.id);
     // Note: _player.play() is intentionally omitted here
   }
@@ -87,6 +106,9 @@ class PodcastAudioHandler extends BaseAudioHandler with SeekHandler {
   Future<void> skipToNext() async {
     // Implement skip logic if supporting playlists
   }
+
+  // Expose the underlying player for position stream access
+  AudioPlayer get player => _player;
 
   @override
   Future<void> skipToPrevious() async {

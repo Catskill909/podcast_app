@@ -93,25 +93,39 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   const SizedBox(height: 24),
                   Consumer<AudioProvider>(
                     builder: (context, audioProvider, child) {
-                      final position = audioProvider.position;
-                      final total = widget.episode.duration;
-                      return Column(
-                        children: [
-                          Slider(
-                            value: position.inSeconds.toDouble(),
-                            min: 0,
-                            max: total.inSeconds.toDouble(),
-                            onChanged: (value) => audioProvider
-                                .seek(Duration(seconds: value.toInt())),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      final mediaItem =
+                          audioProvider.audioHandler.mediaItem.value;
+                      final totalDuration =
+                          mediaItem?.duration ?? Duration.zero;
+                      final sliderMax = totalDuration.inSeconds.toDouble();
+
+                      return StreamBuilder<Duration>(
+                        stream: audioProvider.positionStream,
+                        initialData: audioProvider.position,
+                        builder: (context, snapshot) {
+                          final position = snapshot.data ?? Duration.zero;
+                          return Column(
                             children: [
-                              Text(_formatDuration(position)),
-                              Text(_formatDuration(total)),
+                              Slider(
+                                value: position.inSeconds
+                                    .toDouble()
+                                    .clamp(0.0, sliderMax),
+                                min: 0,
+                                max: sliderMax > 0 ? sliderMax : 1.0,
+                                onChanged: (value) => audioProvider
+                                    .seek(Duration(seconds: value.toInt())),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(_formatDuration(position)),
+                                  Text(_formatDuration(totalDuration)),
+                                ],
+                              ),
                             ],
-                          ),
-                        ],
+                          );
+                        },
                       );
                     },
                   ),
