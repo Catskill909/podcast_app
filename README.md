@@ -38,8 +38,8 @@ A modern, minimal, and slick Flutter podcasting app.
 - [`flutter_social_button`](https://pub.dev/packages/flutter_social_button): Social media sharing buttons
 - [`font_awesome_flutter`](https://pub.dev/packages/font_awesome_flutter): Icon set for UI elements
 - [`http`](https://pub.dev/packages/http): API calls (for future backend)
-- `flutter_launcher_icons`: App icon generation
-- `flutter_native_splash`: Splash screen generation
+- [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons): App icon generation
+- [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash): Splash screen generation
 
 ---
 
