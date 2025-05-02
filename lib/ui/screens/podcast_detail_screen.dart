@@ -141,20 +141,58 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: episode.imageUrl != null &&
-                                          episode.imageUrl!.isNotEmpty
+                                  child: (episode.imageUrl != null &&
+                                          episode.imageUrl!.isNotEmpty)
                                       ? Image.network(
                                           episode.imageUrl!,
                                           width: 80,
                                           height: 80,
                                           fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return (widget.podcast.imageUrl.isNotEmpty)
+                                                ? Image.network(
+                                                    widget.podcast.imageUrl,
+                                                    width: 80,
+                                                    height: 80,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) {
+                                                      return Image.asset(
+                                                        'assets/images/pacifica-news.png',
+                                                        width: 80,
+                                                        height: 80,
+                                                        fit: BoxFit.cover,
+                                                      );
+                                                    },
+                                                  )
+                                                : Image.asset(
+                                                    'assets/images/pacifica-news.png',
+                                                    width: 80,
+                                                    height: 80,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                          },
                                         )
-                                      : Image.network(
-                                          widget.podcast.imageUrl,
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      : (widget.podcast.imageUrl.isNotEmpty
+                                          ? Image.network(
+                                              widget.podcast.imageUrl,
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Image.asset(
+                                                  'assets/images/pacifica-news.png',
+                                                  width: 80,
+                                                  height: 80,
+                                                  fit: BoxFit.cover,
+                                                );
+                                              },
+                                            )
+                                          : Image.asset(
+                                              'assets/images/pacifica-news.png',
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                            )),
                                 ),
                               ),
                             ),
@@ -172,9 +210,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                                             : _formatPubDate(episode.pubDate)),
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white.withAlpha(220),
                                       fontSize: 16,
                                     ),
                                   ),
