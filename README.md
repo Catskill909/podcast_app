@@ -112,12 +112,26 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Monetization: support for premium feeds, donations, or ad-insertion.
 
 **Aspirational Podcast App Features:**
+
 - **Resume Playback Patterns:**
-  - Auto-resume playback for ongoing or recent episodes (like Spotify, Apple Podcasts).
-  - Prompt to "Resume or Start Over" if returning after a long time or for long episodes.
-  - Mini progress bar under each episode in the list to show listen progress.
-  - Per-episode progress tracking and marking as "played" when completed.
-  - Resume playing button, last played timestamp, and progress bar/scrubber in episode UI.
+  1. **Auto-resume silently (for ongoing playback or recent episodes):**
+     - When a user navigates back to the same episode, the app automatically resumes from where they left off, without asking.
+     - The scrubber (seek bar) reflects the last position.
+     - Common in: Spotify, Apple Podcasts, Pocket Casts.
+  2. **Prompt with "Resume or Start Over" (if position is old or episode changed):**
+     - If the user hasn’t listened in a while, or the episode is long:
+     - A prompt like:
+       > “Resume from 12:43?”  
+       > ▶️ Resume | ⏪ Start Over
+     - Some apps show a mini progress bar under each episode in the list, indicating how much has been listened.
+  3. **Progress tracking per episode:**
+     - The app saves playback position per episode.
+     - When an episode is fully played, it’s marked as "played", and progress resets.
+  4. **UI elements typically used:**
+     - Progress bar / scrubber: shows current position.
+     - Timestamp indicator: e.g., "Last played at 12:43".
+     - "Resume playing" button on episode screen or player.
+     - Episode list UI with progress bar under titles.
 - **Standard Audio Features:**
   - Variable playback speed, skip intro/outro, rewind/forward buttons.
   - Sleep timer (auto-stop after set time or at episode end).
