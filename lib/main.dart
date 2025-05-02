@@ -75,12 +75,17 @@ class PodcastApp extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/home': (context) => AppScaffold(child: HomeScreen()),
           '/podcast': (context) {
-            final podcast = ModalRoute.of(context)!.settings.arguments as Podcast;
-            return AppScaffold(child: PodcastDetailScreen(podcast: podcast));
+            final podcast =
+                ModalRoute.of(context)!.settings.arguments as Podcast;
+            return AppScaffold(
+                showMiniPlayer: true,
+                child: PodcastDetailScreen(podcast: podcast));
           },
           '/player': (context) {
-            final episode = ModalRoute.of(context)!.settings.arguments as Episode;
-            return AppScaffold(child: PlayerScreen(episode: episode));
+            final episode =
+                ModalRoute.of(context)!.settings.arguments as Episode;
+            return AppScaffold(
+                showMiniPlayer: false, child: PlayerScreen(episode: episode));
           },
         },
         // onGenerateRoute: AppRouter.generateRoute,

@@ -5,17 +5,21 @@ import 'mini_player.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget child;
-  const AppScaffold({required this.child, Key? key}) : super(key: key);
+  final bool showMiniPlayer;
+  const AppScaffold({required this.child, this.showMiniPlayer = true, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final audioProvider = Provider.of<AudioProvider>(context);
     final episode = audioProvider.currentEpisode;
-    final isPlaying = episode != null ? (audioProvider.isPlaying && !audioProvider.isCompleted) : false;
+    final isPlaying = episode != null
+        ? (audioProvider.isPlaying && !audioProvider.isCompleted)
+        : false;
     return Stack(
       children: [
         child,
-        if (episode != null)
+        if (showMiniPlayer && episode != null)
           Positioned(
             left: 0,
             right: 0,
