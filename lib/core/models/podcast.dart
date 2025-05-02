@@ -8,6 +8,14 @@ class Podcast {
   final String description;
   final List<Episode> episodes;
 
+  // KPFA & iTunes fields
+  final String? subtitle;
+  final String? summary;
+  final String? language;
+  final String? copyright;
+  final String? category;
+  final String? explicitTag;
+
   Podcast({
     required this.id,
     required this.title,
@@ -15,5 +23,11 @@ class Podcast {
     required this.imageUrl,
     required this.description,
     required this.episodes,
+    this.subtitle,
+    this.summary,
+    this.language,
+    this.copyright,
+    this.category,
+    this.explicitTag,
   });
 }

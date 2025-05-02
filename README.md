@@ -76,11 +76,25 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ---
 
-## Today's Session Summary (2025-04-28)
+## 2025-05-02: Development Session Summary
 
-- Enabled full dark mode support (auto, system-based)
-- Floating mini player background now adapts to dark mode
-- Customized app typography: Oswald bold for headers, Nunito for body text
+### Major Fixes and Improvements
+- **Restored all missing podcast and episode text**: Improved XML parsing logic to robustly extract text from RSS feeds, including CDATA and value fallbacks, ensuring all descriptions, titles, and summaries display correctly.
+- **UI/UX Enhancements**:
+  - Episode images now use Material border and drop shadow for depth, matching Material Design best practices.
+  - Episode description text is lighter for better readability on dark backgrounds.
+  - Episode list rows are now minimalist: only the bold episode title (with date) is shown, with all redundant or cluttered text removed.
+  - All headers use Oswald font and are styled with the app's minimalist dark theme.
+- **Performance Refactor**:
+  - Episode lists now use `ListView.builder` for lazy loading, ensuring smooth scrolling and low memory usage even with long feeds.
+  - Transparency and shadow effects now use `.withAlpha` for better performance and to resolve deprecation warnings.
+
+### Technical and Code Quality
+- All lints and warnings (including deprecated API usage) have been addressed.
+- No redundant or duplicate information is present in this README or the codebase as of this update.
+- All existing app functions, navigation, and audio features remain unchanged and stable.
+
+---
 - Investigated scrubber/slider UX and clarified placeholder audio duration behavior
 - General theme and UI polish
 
