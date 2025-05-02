@@ -99,8 +99,7 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - General theme and UI polish
 
 ## Roadmap / Possible Future Developments for a World-Class Podcast App
-- [x] **Background audio playback and rich metadata to OS (lockscreen/status bar)**: Already fully implemented using audio_service, just_audio, and audio_session. Podcast/episode metadata, artwork, and controls are shown on lockscreen and notifications.
-- [x] **Background audio handler logic**: Already implemented for seamless playback, audio focus, and system integration.
+
 - **Possible future enhancements:** Add even richer metadata (e.g., chapters, transcripts, segment artwork), smarter resume/queueing, or analytics.
 
 ### 1. Dark Mode Support
