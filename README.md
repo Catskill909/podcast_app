@@ -162,26 +162,19 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ## Possible Future Development
 
-- **Lockscreen & Status Bar Metadata:**
-  - **Completed**: Podcast title, episode, artwork, and playback controls are shown on lockscreen and notification area (using just_audio + audio_session + [audio_service](https://pub.dev/packages/audio_service)).
-  - **Completed**: Playback progress and play/pause/seek from lockscreen or notification.
-- **Background Playback:**
-  - **Completed**: Full support for audio playback when app is in the background (audio_service integration).
-- **Media Controls Integration:**
-  - **Completed**: Handles hardware/media buttons (play/pause/skip) from headphones, car, or device.
-- **Playback Speed & Skip Controls:**
-  - Variable playback speed, skip intro/outro, rewind/forward buttons.
-- **Podcast Downloads:**
-  - Offline playback by downloading episodes to device storage.
-- **Smart Playlists & Queues:**
-  - Custom episode queues, smart playlists, continue listening, etc.
-- **Sleep Timer:**
-  - Auto-stop playback after a set time or at episode end.
-- **Chapter Support:**
-  - Display and jump between chapters within podcast episodes.
-- **Transcripts & Search:**
-  - Show episode transcripts, allow search within audio or transcript.
-- **Sharing & Deep Links:**
+- Variable playback speed, skip intro/outro, rewind/forward buttons.
+- Offline playback by downloading episodes to device storage.
+- Custom episode queues, smart playlists, continue listening, etc.
+- Auto-stop playback after a set time or at episode end (sleep timer).
+- Display and jump between chapters within podcast episodes.
+- Show episode transcripts, allow search within audio or transcript.
+- Share episodes or podcasts with deep linking support.
+- Add even richer metadata (e.g., chapters, transcripts, segment artwork), smarter resume/queueing, or analytics.
+- Enhance smart playlists, recommendations, and user profiles.
+- Add advanced sharing, deep links, and social features.
+- Expand accessibility and localization support.
+- Implement advanced analytics and listening stats.
+- Further modularize audio and state management for scalability.
   - Share episodes or podcasts with deep linking support.
 - **Analytics & Listening Stats:**
   - Track listening habits, completion rates, and provide insights to users.
