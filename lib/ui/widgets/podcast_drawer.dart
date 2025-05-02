@@ -75,7 +75,8 @@ class PodcastDrawer extends StatelessWidget {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        _launchURL('https://yourdomain.com');
+                        _launchURL(
+                            'https://pacificanetwork.org/about-pacifica-foundation/pacifica-foundation/');
                       },
                     ),
                     ListTile(
@@ -89,7 +90,7 @@ class PodcastDrawer extends StatelessWidget {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        _launchURL('https://yourdomain.com');
+                        _launchURL('https://pacificanetwork.org/contact/');
                       },
                     ),
                     ListTile(
@@ -103,7 +104,7 @@ class PodcastDrawer extends StatelessWidget {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        _launchURL('https://yourdomain.com');
+                        _launchURL('https://pacificanetwork.org');
                       },
                     ),
                     ListTile(
@@ -117,7 +118,7 @@ class PodcastDrawer extends StatelessWidget {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        _launchURL('https://yourdomain.com/privacy');
+                        _launchURL('https://pacificanetwork.org');
                       },
                     ),
                   ],
@@ -129,59 +130,61 @@ class PodcastDrawer extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+                      padding: const EdgeInsets.only(
+                          left: 12.0, right: 12.0, top: 8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SocialCircleButton(
                             icon: FontAwesomeIcons.facebookF,
                             onTap: () {
-  Navigator.of(context).pop();
-  _launchURL('https://facebook.com/yourpage');
-},
+                              Navigator.of(context).pop();
+                              _launchURL('https://facebook.com/yourpage');
+                            },
                             size: 36.0,
                           ),
                           const SizedBox(width: 16),
                           SocialCircleButton(
                             icon: FontAwesomeIcons.instagram,
                             onTap: () {
-  Navigator.of(context).pop();
-  _launchURL('https://instagram.com/yourpage');
-},
+                              Navigator.of(context).pop();
+                              _launchURL('https://instagram.com/yourpage');
+                            },
                             size: 36.0,
                           ),
                           const SizedBox(width: 16),
                           SocialCircleButton(
                             icon: FontAwesomeIcons.twitter,
                             onTap: () {
-  Navigator.of(context).pop();
-  _launchURL('https://twitter.com/yourpage');
-},
+                              Navigator.of(context).pop();
+                              _launchURL('https://twitter.com/yourpage');
+                            },
                             size: 36.0,
                           ),
                           const SizedBox(width: 16),
                           SocialCircleButton(
                             icon: FontAwesomeIcons.youtube,
                             onTap: () {
-  Navigator.of(context).pop();
-  _launchURL('https://youtube.com/yourpage');
-},
+                              Navigator.of(context).pop();
+                              _launchURL('https://youtube.com/yourpage');
+                            },
                             size: 36.0,
                           ),
                           const SizedBox(width: 16),
                           SocialCircleButton(
                             icon: Icons.email_outlined,
                             onTap: () {
-  Navigator.of(context).pop();
-  _launchURL('mailto:your@email.com');
-},
+                              Navigator.of(context).pop();
+                              _launchURL('mailto:your@email.com');
+                            },
                             size: 36.0,
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).padding.bottom + 56 + 16 + 16,
+                      height:
+                          MediaQuery.of(context).padding.bottom + 56 + 16 + 16,
                     ),
                     const Divider(),
                   ],
