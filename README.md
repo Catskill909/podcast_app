@@ -100,19 +100,15 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ## Roadmap / Possible Future Developments for a World-Class Podcast App
 
-- **Possible future enhancements:** Add even richer metadata (e.g., chapters, transcripts, segment artwork), smarter resume/queueing, or analytics.
+- Add even richer metadata (e.g., chapters, transcripts, segment artwork), smarter resume/queueing, or analytics.
+- Enhance smart playlists, recommendations, and user profiles.
+- Add advanced sharing, deep links, and social features.
+- Expand accessibility and localization support.
+- Implement advanced analytics and listening stats.
+- Further modularize audio and state management for scalability.
 
-### 1. Dark Mode Support
-- **Completed**: Implement a dark theme (ThemeData.dark) and allow users to toggle between light/dark/system mode.
+---
 
-### 2. Background Audio & Audio Services
-- **Completed**: [`audio_service`](https://pub.dev/packages/audio_service) is integrated alongside `just_audio` and `audio_session`.
-- **Completed**: True background playback (audio keeps playing when the app is minimized or the screen is off).
-- **Completed**: Handles audio focus, interruptions, and phone call events.
-
-### 3. Lockscreen & Status Bar Controls
-- Send podcast metadata (title, artist, artwork, position, etc.) to the OS for display on the lockscreen and system notification.
-- Support lockscreen controls: play, pause, skip, seek, etc.
 - Show playback progress and allow user interaction from outside the app.
 
 ---
