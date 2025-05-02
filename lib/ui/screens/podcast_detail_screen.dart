@@ -25,7 +25,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             Center(
               child: CircleAvatar(
                 radius: 64,
-                backgroundImage: NetworkImage(widget.podcast.imageUrl),
+                backgroundImage: (widget.podcast.imageUrl.isEmpty)
+                    ? const AssetImage('assets/images/pacifica-news.png')
+                    : NetworkImage(widget.podcast.imageUrl) as ImageProvider,
               ),
             ),
             const SizedBox(height: 16),
@@ -37,16 +39,20 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                   children: [
                     AnimatedCrossFade(
                       duration: const Duration(milliseconds: 200),
-                      crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                      crossFadeState: _expanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                       firstChild: Text(
                         text,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       secondChild: Text(
                         text,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     GestureDetector(
@@ -104,7 +110,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                             audioUrl: episode.audioUrl,
                             description: episode.description,
                             duration: episode.duration,
-                            podcastImageUrl: episode.imageUrl ?? widget.podcast.imageUrl,
+                            podcastImageUrl:
+                                episode.imageUrl ?? widget.podcast.imageUrl,
                             summary: episode.summary,
                             contentHtml: episode.contentHtml,
                             imageUrl: episode.imageUrl,
@@ -116,34 +123,38 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 12),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Material(
                               elevation: 4,
                               borderRadius: BorderRadius.circular(12),
-                              shadowColor: Colors.black.withAlpha((0.15 * 255).toInt()),
+                              shadowColor:
+                                  Colors.black.withAlpha((0.15 * 255).toInt()),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white24, width: 1.2),
+                                  border: Border.all(
+                                      color: Colors.white24, width: 1.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: episode.imageUrl != null && episode.imageUrl!.isNotEmpty
-                                    ? Image.network(
-                                        episode.imageUrl!,
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.network(
-                                        widget.podcast.imageUrl,
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                      ),
+                                  child: episode.imageUrl != null &&
+                                          episode.imageUrl!.isNotEmpty
+                                      ? Image.network(
+                                          episode.imageUrl!,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.network(
+                                          widget.podcast.imageUrl,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                             ),
@@ -153,9 +164,12 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    episode.pubDate != null && episode.title.isNotEmpty
-                                      ? '${episode.title} – ${_formatPubDate(episode.pubDate)}'
-                                      : (episode.title.isNotEmpty ? episode.title : _formatPubDate(episode.pubDate)),
+                                    episode.pubDate != null &&
+                                            episode.title.isNotEmpty
+                                        ? '${episode.title} – ${_formatPubDate(episode.pubDate)}'
+                                        : (episode.title.isNotEmpty
+                                            ? episode.title
+                                            : _formatPubDate(episode.pubDate)),
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -189,11 +203,20 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
 
   String _monthName(int month) {
     const months = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return months[month];
   }
 }
-
-
