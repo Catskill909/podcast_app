@@ -98,65 +98,45 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Investigated scrubber/slider UX and clarified placeholder audio duration behavior
 - General theme and UI polish
 
-## Roadmap / Possible Future Developments for a World-Class Podcast App
+## Possible Future Development
 
+- Centralized configuration file for feeds, colors, menu items, and app constants.
 - Add even richer metadata (e.g., chapters, transcripts, segment artwork), smarter resume/queueing, or analytics.
 - Enhance smart playlists, recommendations, and user profiles.
 - Add advanced sharing, deep links, and social features.
 - Expand accessibility and localization support.
 - Implement advanced analytics and listening stats.
 - Further modularize audio and state management for scalability.
-
----
-
-- Show playback progress and allow user interaction from outside the app.
-
----
-## Standard Podcast App UI Pattern: Resume Playback
-
-1. **Auto-resume silently (for ongoing playback or recent episodes):**
-   - When a user navigates back to the same episode, the app automatically resumes from where they left off, without asking.
-   - The scrubber (seek bar) reflects the last position.
-   - Common in: Spotify, Apple Podcasts, Pocket Casts
-
-2. **Prompt with "Resume or Start Over" (if position is old or episode changed):**
-   - If the user hasn’t listened in a while, or the episode is long:
-   - A prompt like:
-     > “Resume from 12:43?”  
-     > ▶️ Resume | ⏪ Start Over
-   - Some apps show a mini progress bar under each episode in the list, indicating how much has been listened.
-
-3. **Progress tracking per episode:**
-   - The app saves playback position per episode.
-   - When an episode is fully played, it’s marked as "played", and progress resets.
-
-4. **UI elements typically used:**
-   - Progress bar / scrubber: shows current position.
-   - Timestamp indicator: e.g., "Last played at 12:43".
-   - "Resume playing" button on episode screen or player.
-   - Episode list UI with progress bar under titles.
-### 4. Standard Audio Features for Modern Podcast Apps
-- Playback speed control.
-- Skip/replay (customizable skip intervals).
-- Sleep timer.
-- Download for offline listening.
-- Playlist/queue management (episode queue, smart playlists, auto-play next).
-- Bookmarks and resume playback per episode.
-- Mini-player improvements for navigation and quick controls.
-- Enhanced notification controls (show artwork, more actions).
-- Android 13+ notification permissions and compatibility.
 - CI/CD pipeline for automated tests and builds.
 - App Store/Play Store release prep (icons, splash screens, privacy, changelog).
-- Smart resume and “continue listening.”
-- Chapter support and rich episode metadata.
-- Hardware/media button support (headphones, car, etc.).
-- Analytics and listening stats.
-- Accessibility: full support for screen readers, large text, etc.
+- Monetization: support for premium feeds, donations, or ad-insertion.
 
-### 5. Architecture & Code Quality
-- Modularize audio logic (services/providers).
+**Aspirational Podcast App Features:**
+- **Resume Playback Patterns:**
+  - Auto-resume playback for ongoing or recent episodes (like Spotify, Apple Podcasts).
+  - Prompt to "Resume or Start Over" if returning after a long time or for long episodes.
+  - Mini progress bar under each episode in the list to show listen progress.
+  - Per-episode progress tracking and marking as "played" when completed.
+  - Resume playing button, last played timestamp, and progress bar/scrubber in episode UI.
+- **Standard Audio Features:**
+  - Variable playback speed, skip intro/outro, rewind/forward buttons.
+  - Sleep timer (auto-stop after set time or at episode end).
+  - Download for offline listening.
+  - Playlist/queue management (episode queue, smart playlists, auto-play next).
+  - Bookmarks and resume playback per episode.
+  - Mini-player improvements for navigation and quick controls.
+  - Enhanced notification controls (show artwork, more actions).
+  - Hardware/media button support (headphones, car, Bluetooth, etc.).
+  - Chapter support and rich episode metadata.
+  - Show episode transcripts, allow search within audio or transcript.
+  - Share episodes or podcasts with deep linking support.
+  - Analytics and listening stats (track listening habits, completion rates, insights).
+  - Accessibility: full support for screen readers, large text, etc.
+
+**Architecture & Code Quality Goals:**
 - Maintain clean separation of UI, business logic, and platform integrations.
 - Write unit and widget tests for all new features.
+- Further modularize audio logic (services/providers) for scalability.
 
 ---
 
