@@ -7,7 +7,7 @@ A modern, minimal, and slick Flutter podcasting app.
 ## Features
 
 - **Modern UI:** Minimalist design, Material 3, Google Fonts, responsive layouts
-- **Podcast Browser:** Home screen with a list of podcasts (mock data, ready for API integration)
+- **Podcast Browser:** Home screen with a list of podcasts 
 - **Podcast Detail:** View podcast description and list of episodes
 - **Audio Playback:**
   - Play, pause, seek, and skip audio with just_audio
@@ -69,7 +69,7 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 ## Future AI/Developer Notes
 
 - All services and models are designed for easy extension (API, favorites, downloads, etc.)
-- Replace mock data in PodcastApiService with real API integration
+- Add more API feeds
 - Add more providers or migrate to Riverpod for advanced state management
 - Add more features: downloads, playlists, user profiles, recommendations, etc.
 - All lints and warnings are actively managed for clean development
@@ -107,7 +107,6 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Expand accessibility and localization support.
 - Implement advanced analytics and listening stats.
 - Further modularize audio and state management for scalability.
-- CI/CD pipeline for automated tests and builds.
 - App Store/Play Store release prep (icons, splash screens, privacy, changelog).
 - Monetization: support for premium feeds, donations, or ad-insertion.
 
