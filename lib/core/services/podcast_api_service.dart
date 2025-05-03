@@ -61,7 +61,7 @@ class PodcastApiService {
             description: episodeDescription,
             summary: episodeSummary,
             contentHtml: episodeContentHtml,
-            imageUrl: imageUrl.isNotEmpty ? imageUrl : channel.getElement('itunes:image')?.getAttribute('href'),
+            imageUrl: (imageUrl.isNotEmpty ? imageUrl : channel.getElement('itunes:image')?.getAttribute('href')) ?? '',
             podcastImageUrl: channel.getElement('itunes:image')?.getAttribute('href') ?? '',
             duration: duration,
             pubDate: _parsePubDate(episodePubDate),

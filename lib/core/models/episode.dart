@@ -5,11 +5,11 @@ class Episode {
   final String description;
   final Duration duration;
   final String podcastImageUrl;
+  final String imageUrl;
 
   // KPFA & iTunes fields
   final String? summary;
   final String? contentHtml;
-  final String? imageUrl;
   final int? audioLength;
   final String? audioType;
   final DateTime? pubDate;
@@ -22,9 +22,9 @@ class Episode {
     required this.description,
     required this.duration,
     required this.podcastImageUrl,
+    this.imageUrl = '',
     this.summary,
     this.contentHtml,
-    this.imageUrl,
     this.audioLength,
     this.audioType,
     this.pubDate,

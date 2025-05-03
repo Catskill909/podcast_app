@@ -25,9 +25,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             Center(
               child: CircleAvatar(
                 radius: 64,
-                backgroundImage: (widget.podcast.imageUrl.isEmpty)
-                    ? const AssetImage('assets/images/pacifica-news.png')
-                    : NetworkImage(widget.podcast.imageUrl) as ImageProvider,
+                backgroundImage: widget.podcast.imageUrl.isNotEmpty
+                    ? NetworkImage(widget.podcast.imageUrl) as ImageProvider
+                    : const AssetImage('assets/images/pacifica-news.png'),
               ),
             ),
             const SizedBox(height: 16),
@@ -110,8 +110,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                             audioUrl: episode.audioUrl,
                             description: episode.description,
                             duration: episode.duration,
-                            podcastImageUrl:
-                                episode.imageUrl ?? widget.podcast.imageUrl,
+                            podcastImageUrl: episode.imageUrl.isNotEmpty
+                                ? episode.imageUrl
+                                : widget.podcast.imageUrl,
                             summary: episode.summary,
                             contentHtml: episode.contentHtml,
                             imageUrl: episode.imageUrl,
@@ -141,35 +142,19 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: (episode.imageUrl != null &&
-                                          episode.imageUrl!.isNotEmpty)
+                                  child: episode.imageUrl.isNotEmpty
                                       ? Image.network(
-                                          episode.imageUrl!,
+                                          episode.imageUrl,
                                           width: 80,
                                           height: 80,
                                           fit: BoxFit.cover,
                                           errorBuilder: (context, error, stackTrace) {
-                                            return (widget.podcast.imageUrl.isNotEmpty)
-                                                ? Image.network(
-                                                    widget.podcast.imageUrl,
-                                                    width: 80,
-                                                    height: 80,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return Image.asset(
-                                                        'assets/images/pacifica-news.png',
-                                                        width: 80,
-                                                        height: 80,
-                                                        fit: BoxFit.cover,
-                                                      );
-                                                    },
-                                                  )
-                                                : Image.asset(
-                                                    'assets/images/pacifica-news.png',
-                                                    width: 80,
-                                                    height: 80,
-                                                    fit: BoxFit.cover,
-                                                  );
+                                            return Image.asset(
+                                              'assets/images/pacifica-news.png',
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                            );
                                           },
                                         )
                                       : (widget.podcast.imageUrl.isNotEmpty
