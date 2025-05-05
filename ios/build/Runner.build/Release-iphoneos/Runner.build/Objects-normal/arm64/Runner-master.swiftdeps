@@ -1,8 +1,0 @@
-version: "Apple Swift version 6.1 (swiftlang-6.1.0.110.21 clang-1700.0.13.3)"
-options: "8f56141df49736480327b740b8d1a551e06e8facc761313bf7840f76fe584fdf"
-build_start_time: [1746461260, 602625000]
-build_end_time: [1746461266, 127268000]
-inputs:
-  "/Users/paulhenshaw/Desktop/podcast/ios/Runner/AppDelegate.swift": [1729523607, 759747644]
-  ? "/Users/paulhenshaw/Desktop/podcast/ios/build/Runner.build/Release-iphoneos/Runner.build/DerivedSources/GeneratedAssetSymbols.swift"
-  : [1746461260, 232700774]
