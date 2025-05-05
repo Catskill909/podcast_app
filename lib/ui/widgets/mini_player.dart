@@ -19,6 +19,44 @@ class MiniPlayer extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        // ignore: prefer_const_constructors
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor.withAlpha(230),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withAlpha(150), // More subtle border
+            width: 2.0, // Reduced width
+          ),
+          boxShadow: [
+            // ignore: prefer_const_constructors
+            BoxShadow(
+              color: Colors.black.withAlpha(40), // Lighter shadow
+              blurRadius: 12,
+              offset: Offset(0, 2),
+              spreadRadius: 0.2,
+            ),
+            // ignore: prefer_const_constructors
+            BoxShadow(
+              color: Colors.white.withAlpha(30), // Added inner glow
+              blurRadius: 4,
+              offset: Offset(0, -2),
+              spreadRadius: 0.2,
+            ),
+            // ignore: prefer_const_constructors
+            BoxShadow(
+              color: Colors.white.withAlpha(30), // Added inner glow
+              blurRadius: 4,
+              offset: Offset(0, -2),
+              spreadRadius: 0.2,
+            ),
+            BoxShadow(
+              color: Colors.black.withAlpha(60),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+              spreadRadius: 0.3,
+            ),
+          ],
+        ),
         child: Row(
           children: [
             // Replaced Icon with IconButton for separate tap handling

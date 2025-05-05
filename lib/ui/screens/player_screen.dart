@@ -31,6 +31,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(title: const Text('The Pacifica Evening News')),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
@@ -61,7 +62,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                   fit: BoxFit.cover,
                                 ),
                         ),
-                        Positioned.fill(
+
+
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          height: 91, // covers 38% of the image (240px height)
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -69,43 +76,38 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black.withAlpha((0.7 * 255).toInt()),
+                                  Colors.black.withAlpha(220), // darker
                                 ],
                               ),
                             ),
                           ),
                         ),
                         Positioned(
-                          top: 16,
-                          left: 16,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.black54,
-                            child: IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ),
-                        ),
-                        Positioned(
                           left: 20,
-                          bottom: 20,
                           right: 20,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.episode.title,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontFamily: 'Oswald',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  shadows: const [Shadow(blurRadius: 8, color: Colors.black45)],
+                          bottom: 20,
+                          child: Text(
+                            widget.episode.title,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontFamily: 'Oswald',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 15,
+                              shadows: const [
+                                Shadow(
+                                  blurRadius: 10,
+                                  color: Colors.black87,
+                                  offset: Offset(0, 2),
                                 ),
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                                Shadow(
+                                  blurRadius: 16,
+                                  color: Colors.black54,
+                                  offset: Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
