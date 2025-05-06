@@ -15,9 +15,13 @@ class PodcastApiService {
       if (node is XmlText) buffer.write(node.value);
       if (node is XmlCDATA) buffer.write(node.value);
     }
-    // Fallback: if still empty, try .value
+    // Fallback: if still empty, try .text or .innerText
     final result = buffer.toString().trim();
-    return result.isNotEmpty ? result : (element.value ?? '').trim();
+    if (result.isNotEmpty) return result;
+    
+    // More aggressive extraction for elements with CDATA or complex content
+    final directText = element.innerText.trim();
+    return directText.isNotEmpty ? directText : element.text.trim();
   }
 
   Future<List<Podcast>> fetchPodcasts() async {
@@ -50,6 +54,7 @@ class PodcastApiService {
         category: channel.getElement('itunes:category')?.getAttribute('text'),
         explicitTag: getXmlText(channel.getElement('itunes:explicit')),
         episodes: channel.findElements('item').map((item) {
+          // Make sure we get the real title, not the iTunes title
           final episodeTitle = getXmlText(item.getElement('title'));
           final episodeDescription = getXmlText(item.getElement('description'));
           final episodeSummary = getXmlText(item.getElement('itunes:summary'));
