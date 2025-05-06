@@ -28,17 +28,11 @@ class PodcastApiService {
       final responseStart = DateTime.now();
       // ignore: avoid_print
       print('[fetchPodcasts] Before HTTP request: ${responseStart.difference(start).inMilliseconds} ms');
-      final response = await http.get(Uri.parse(kpfaFeedUrl)).timeout(const Duration(seconds: 10));
-      final responseEnd = DateTime.now();
-      // ignore: avoid_print
-      print('[fetchPodcasts] After HTTP response: ${responseEnd.difference(start).inMilliseconds} ms');
+      final response = await http.get(Uri.parse(kpfaFeedUrl));
       if (response.statusCode != 200) {
         throw Exception('Failed to load KPFA feed');
       }
       final xmlDoc = XmlDocument.parse(response.body);
-      final parseEnd = DateTime.now();
-      // ignore: avoid_print
-      print('[fetchPodcasts] After XML parse: ${parseEnd.difference(start).inMilliseconds} ms');
       final channel = xmlDoc.findAllElements('channel').first;
       final podcast = Podcast(
         id: getXmlText(channel.getElement('link')),
@@ -93,13 +87,8 @@ class PodcastApiService {
           );
         }).toList(),
       );
-      final done = DateTime.now();
-      // ignore: avoid_print
-      print('[fetchPodcasts] After Podcast obj creation: ${done.difference(start).inMilliseconds} ms');
       return [podcast];
     } catch (e) {
-      // ignore: avoid_print
-      print('[fetchPodcasts] ERROR: $e');
       return [];
     }
   }
