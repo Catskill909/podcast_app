@@ -5,7 +5,8 @@ import '../models/podcast.dart';
 import '../models/episode.dart';
 
 class PodcastApiService {
-  static const String kpfaFeedUrl = 'https://kpfa.org/program/the-pacifica-evening-news-weekdays/feed/';
+  static const String kpfaFeedUrl =
+      'https://kpfa.org/program/the-pacifica-evening-news-weekdays/feed/';
 
   String getXmlText(XmlElement? element) {
     if (element == null) return '';
@@ -21,15 +22,30 @@ class PodcastApiService {
 
   Future<List<Podcast>> fetchPodcasts() async {
     try {
-      final response = await http.get(Uri.parse(kpfaFeedUrl));
-      if (response.statusCode != 200) throw Exception('Failed to load KPFA feed');
+      final start = DateTime.now();
+      // ignore: avoid_print
+      print('[fetchPodcasts] Start: ${start.toIso8601String()}');
+      final responseStart = DateTime.now();
+      // ignore: avoid_print
+      print('[fetchPodcasts] Before HTTP request: ${responseStart.difference(start).inMilliseconds} ms');
+      final response = await http.get(Uri.parse(kpfaFeedUrl)).timeout(const Duration(seconds: 10));
+      final responseEnd = DateTime.now();
+      // ignore: avoid_print
+      print('[fetchPodcasts] After HTTP response: ${responseEnd.difference(start).inMilliseconds} ms');
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load KPFA feed');
+      }
       final xmlDoc = XmlDocument.parse(response.body);
+      final parseEnd = DateTime.now();
+      // ignore: avoid_print
+      print('[fetchPodcasts] After XML parse: ${parseEnd.difference(start).inMilliseconds} ms');
       final channel = xmlDoc.findAllElements('channel').first;
       final podcast = Podcast(
         id: getXmlText(channel.getElement('link')),
         title: getXmlText(channel.getElement('title')),
         author: getXmlText(channel.getElement('itunes:author')),
-        imageUrl: channel.getElement('itunes:image')?.getAttribute('href') ?? '',
+        imageUrl:
+            channel.getElement('itunes:image')?.getAttribute('href') ?? '',
         description: getXmlText(channel.getElement('description')),
         subtitle: getXmlText(channel.getElement('itunes:subtitle')),
         summary: getXmlText(channel.getElement('itunes:summary')).isNotEmpty
@@ -40,16 +56,18 @@ class PodcastApiService {
         category: channel.getElement('itunes:category')?.getAttribute('text'),
         explicitTag: getXmlText(channel.getElement('itunes:explicit')),
         episodes: channel.findElements('item').map((item) {
-          // Ensure all episode fields use getXmlText for robust extraction
           final episodeTitle = getXmlText(item.getElement('title'));
           final episodeDescription = getXmlText(item.getElement('description'));
           final episodeSummary = getXmlText(item.getElement('itunes:summary'));
-          final episodeContentHtml = getXmlText(item.getElement('content:encoded'));
+          final episodeContentHtml =
+              getXmlText(item.getElement('content:encoded'));
           final episodeGuid = getXmlText(item.getElement('guid'));
-          final episodeExplicitTag = getXmlText(item.getElement('itunes:explicit'));
+          final episodeExplicitTag =
+              getXmlText(item.getElement('itunes:explicit'));
           final episodePubDate = getXmlText(item.getElement('pubDate'));
           final enclosure = item.getElement('enclosure');
-          final imageUrl = item.getElement('itunes:image')?.getAttribute('href') ?? '';
+          final imageUrl =
+              item.getElement('itunes:image')?.getAttribute('href') ?? '';
           final durationStr = getXmlText(item.getElement('itunes:duration'));
           final duration = _parseDuration(durationStr);
           return Episode(
@@ -61,17 +79,27 @@ class PodcastApiService {
             description: episodeDescription,
             summary: episodeSummary,
             contentHtml: episodeContentHtml,
-            imageUrl: (imageUrl.isNotEmpty ? imageUrl : channel.getElement('itunes:image')?.getAttribute('href')) ?? '',
-            podcastImageUrl: channel.getElement('itunes:image')?.getAttribute('href') ?? '',
+            imageUrl: (imageUrl.isNotEmpty
+                    ? imageUrl
+                    : channel
+                        .getElement('itunes:image')
+                        ?.getAttribute('href')) ??
+                '',
+            podcastImageUrl:
+                channel.getElement('itunes:image')?.getAttribute('href') ?? '',
             duration: duration,
             pubDate: _parsePubDate(episodePubDate),
             explicitTag: episodeExplicitTag,
           );
         }).toList(),
       );
+      final done = DateTime.now();
+      // ignore: avoid_print
+      print('[fetchPodcasts] After Podcast obj creation: ${done.difference(start).inMilliseconds} ms');
       return [podcast];
     } catch (e) {
-      // Fallback: return empty list or log error
+      // ignore: avoid_print
+      print('[fetchPodcasts] ERROR: $e');
       return [];
     }
   }
@@ -80,7 +108,8 @@ class PodcastApiService {
     if (input == null) return Duration.zero;
     final parts = input.split(':').map(int.tryParse).toList();
     if (parts.length == 3) {
-      return Duration(hours: parts[0] ?? 0, minutes: parts[1] ?? 0, seconds: parts[2] ?? 0);
+      return Duration(
+          hours: parts[0] ?? 0, minutes: parts[1] ?? 0, seconds: parts[2] ?? 0);
     } else if (parts.length == 2) {
       return Duration(minutes: parts[0] ?? 0, seconds: parts[1] ?? 0);
     } else if (parts.length == 1) {
@@ -99,4 +128,3 @@ class PodcastApiService {
     }
   }
 }
-

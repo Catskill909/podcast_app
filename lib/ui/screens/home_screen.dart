@@ -63,7 +63,8 @@ class HomeScreen extends StatelessWidget {
                           border: Border.all(color: Colors.white24, width: 1.2),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withAlpha((0.15 * 255).toInt()),
+                              color:
+                                  Colors.black.withAlpha((0.15 * 255).toInt()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -82,19 +83,22 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 12),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Material(
                                     elevation: 4,
                                     borderRadius: BorderRadius.circular(12),
-                                    shadowColor: Colors.black.withAlpha((0.15 * 255).toInt()),
+                                    shadowColor: Colors.black
+                                        .withAlpha((0.15 * 255).toInt()),
                                     child: Container(
                                       width: 64,
                                       height: 64,
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.white24, width: 1.2),
+                                        border: Border.all(
+                                            color: Colors.white24, width: 1.2),
                                         borderRadius: BorderRadius.circular(12),
                                         color: Colors.black,
                                       ),
@@ -119,7 +123,8 @@ class HomeScreen extends StatelessWidget {
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           podcast.title,
