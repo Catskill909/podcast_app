@@ -27,30 +27,27 @@ class MiniPlayer extends StatelessWidget {
             color: Colors.white.withAlpha(150), // More subtle border
             width: 2.0, // Reduced width
           ),
-          boxShadow: [
-            // ignore: prefer_const_constructors
+          boxShadow: const [
             BoxShadow(
-              color: Colors.black.withAlpha(40), // Lighter shadow
+              color: Color(0x28000000), // Black with alpha 40
               blurRadius: 12,
               offset: Offset(0, 2),
               spreadRadius: 0.2,
             ),
-            // ignore: prefer_const_constructors
             BoxShadow(
-              color: Colors.white.withAlpha(30), // Added inner glow
-              blurRadius: 4,
-              offset: Offset(0, -2),
-              spreadRadius: 0.2,
-            ),
-            // ignore: prefer_const_constructors
-            BoxShadow(
-              color: Colors.white.withAlpha(30), // Added inner glow
+              color: Color(0x1EFFFFFF), // White with alpha 30
               blurRadius: 4,
               offset: Offset(0, -2),
               spreadRadius: 0.2,
             ),
             BoxShadow(
-              color: Colors.black.withAlpha(60),
+              color: Color(0x1EFFFFFF), // White with alpha 30
+              blurRadius: 4,
+              offset: Offset(0, -2),
+              spreadRadius: 0.2,
+            ),
+            BoxShadow(
+              color: Color(0x3C000000), // Black with alpha 60
               blurRadius: 12,
               offset: Offset(0, 4),
               spreadRadius: 0.3,

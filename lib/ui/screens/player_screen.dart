@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/models/episode.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/audio_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PlayerScreen extends StatefulWidget {
   final Episode episode;
@@ -31,7 +32,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('The Pacifica Evening News')),
+      appBar: AppBar(
+        title: const Text('The Pacifica Evening News'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share, color: Colors.white),
+            onPressed: () {
+              Share.share(
+                'Check out this episode of The Pacifica Evening News: ${widget.episode.title}',
+                subject: widget.episode.title,
+              );
+            },
+          ),
+        ],
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
