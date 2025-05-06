@@ -89,15 +89,17 @@ Podcast image: ${widget.episode.podcastImageUrl}
                           left: 0,
                           right: 0,
                           bottom: 0,
-                          height: 91, // covers 38% of the image (240px height)
+                          height: 160, // covers the whole text area
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
+                                stops: [0.0, 0.6, 1.0],
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black.withAlpha(220), // darker
+                                  Color(0xCC000000), // 80% black
+                                  Color(0xF7000000), // 97% black
                                 ],
                               ),
                             ),
@@ -106,7 +108,7 @@ Podcast image: ${widget.episode.podcastImageUrl}
                         Positioned(
                           left: 20,
                           right: 20,
-                          bottom: 20,
+                          bottom: 32,
                           child: Text(
                             widget.episode.title,
                             style: theme.textTheme.titleLarge?.copyWith(
