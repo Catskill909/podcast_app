@@ -38,8 +38,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
           IconButton(
             icon: const Icon(Icons.share, color: Colors.white),
             onPressed: () {
+              final shareText = '''
+${widget.episode.title}
+
+Listen or read more: ${widget.episode.id}
+
+Podcast image: ${widget.episode.podcastImageUrl}
+''';
               Share.share(
-                'Check out this episode of The Pacifica Evening News: ${widget.episode.title}',
+                shareText,
                 subject: widget.episode.title,
               );
             },
