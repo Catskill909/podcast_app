@@ -3,6 +3,9 @@ import '../../core/models/episode.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/audio_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/parser.dart' as html_parser;
+import 'package:html/dom.dart' as dom;
 
 class PlayerScreen extends StatefulWidget {
   final Episode episode;
@@ -57,11 +60,9 @@ Podcast image: ${widget.episode.podcastImageUrl}
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
               bottom: false,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                     Stack(
                       children: [
                         ClipRRect(
@@ -220,30 +221,65 @@ Podcast image: ${widget.episode.podcastImageUrl}
                       },
                     ),
                     const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        widget.episode.description,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withAlpha(220),
-                          fontSize: 13,
-                          fontFamily: 'Oswald',
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: SingleChildScrollView(
+                          child: Html(
+                            data: _styledHtmlContent(
+                              widget.episode.contentHtml?.isNotEmpty == true
+                                  ? widget.episode.contentHtml!
+                                  : widget.episode.description,
+                            ),
+                            style: {
+                              "body": Style(
+                                color: Colors.white.withAlpha(220),
+                                fontSize: FontSize(13),
+                                fontFamily: 'Oswald',
+                                margin: Margins.zero,
+                                padding: HtmlPaddings.zero,
+                              ),
+                              "ul": Style(margin: Margins.only(left: 12)),
+                              "ol": Style(margin: Margins.only(left: 12)),
+                            },
+                          ),
                         ),
-                        textAlign: TextAlign.left,
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-    );
+            );
   }
 
   String _formatDuration(Duration d) {
     final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+
+  /// Removes <a> and <img> tags but keeps all other HTML and inner text.
+  String _stripLinksAndImages(String html) {
+    final document = html_parser.parse(html);
+    // Remove all <img> tags
+    document.querySelectorAll('img').forEach((img) => img.remove());
+    // Replace <a> tags with their inner text
+    document.querySelectorAll('a').forEach((a) {
+      final text = a.text;
+      final textNode = dom.Text(text);
+      a.replaceWith(textNode);
+    });
+    return document.body?.innerHtml ?? html;
+  }
+
+  /// Prepends a <style> tag to force minimal list indentation.
+  String _styledHtmlContent(String html) {
+    const htmlListStyle = '''
+<style>
+ul, ol { margin-left: 8px !important; padding-left: 8px !important; }
+li { margin-left: 0 !important; padding-left: 0 !important; }
+</style>
+''';
+    return htmlListStyle + _stripLinksAndImages(html);
   }
 }
