@@ -13,6 +13,7 @@ A modern, minimal, and slick Flutter podcasting app.
   - Play, pause, seek, and skip audio with just_audio
   - Modern PlayerScreen with progress slider and controls
   - Global MiniPlayer overlay for playback control from anywhere in the app
+  - Native sharing of current episodes with title, description, and artwork
 - **State Management:** Provider for audio and playback state
 - **Favorites (stub):** Local storage service ready for favorites/bookmarks
 - **Navigation:** Clean, named routing via AppRouter
