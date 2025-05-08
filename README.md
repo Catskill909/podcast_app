@@ -194,6 +194,30 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ---
 
+## Roadmap: Best-in-Class Podcast App Network & Offline Experience
+
+Our next major goal: deliver the best solution for a modern podcasting app—reliable, offline-ready, and seamless. Staged, testable development:
+
+**Stage 1: Local Caching**
+- Cache podcast feed data (Hive/SharedPreferences)
+- Load from cache on startup; background refresh updates cache
+- *Test:* Simulate network loss, verify cached data loads/refreshes
+
+**Stage 2: Connectivity Monitoring**
+- Use connectivity_plus for online/offline detection
+- Show clear 'No Internet' messages, retry options
+- *Test:* Toggle connectivity, verify UI feedback
+
+**Stage 3: Full Offline Support**
+- Always show cached data offline; indicate offline mode
+- *Test:* Run offline, verify full cached experience
+
+**Stage 4: Advanced Error Handling**
+- Categorize errors, user-friendly error/retry UI
+- *Test:* Simulate errors, verify feedback/recovery
+
+---
+
 ## Possible Future Development
 
 - Variable playback speed, skip intro/outro, rewind/forward buttons.
