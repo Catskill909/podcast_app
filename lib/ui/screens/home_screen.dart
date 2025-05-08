@@ -1,13 +1,35 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 // ignore_for_file: prefer_const_constructors
 import '../../core/services/podcast_api_service.dart';
 import '../../core/models/podcast.dart';
 import '../widgets/podcast_drawer.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Podcast>> _podcastFuture;
   final PodcastApiService apiService = PodcastApiService();
 
-  HomeScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _fetchWithTimeout();
+  }
+
+  void _fetchWithTimeout() {
+    setState(() {
+      _podcastFuture = apiService.fetchPodcasts().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Network request timed out'),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +58,88 @@ class HomeScreen extends StatelessWidget {
       ),
       drawer: const PodcastDrawer(),
       body: FutureBuilder<List<Podcast>>(
-        future: apiService.fetchPodcasts(),
+        future: _podcastFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text(
+                    'Loading podcasts...',
+                    style: TextStyle(
+                      fontFamily: 'Oswald',
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
+
+          if (snapshot.hasError) {
+            final isTimeout = snapshot.error is TimeoutException;
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.error_outline, size: 48, color: Colors.redAccent.withAlpha(180)),
+                  const SizedBox(height: 8),
+                  Text(
+                    isTimeout ? 'Request timed out' : 'Couldn\'t load feed',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontFamily: 'Oswald',
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Tap to retry',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                    onPressed: _fetchWithTimeout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white.withAlpha(20),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                'No podcasts available',
+                style: TextStyle(fontFamily: 'Oswald', color: Colors.white70, fontSize: 18),
+              ),
+            );
+          }
+
           final podcasts = snapshot.data!;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Podcasts',
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  'Podcasts',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontFamily: 'Oswald',
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Expanded(
                   child: ListView.builder(
@@ -63,8 +154,7 @@ class HomeScreen extends StatelessWidget {
                           border: Border.all(color: Colors.white24, width: 1.2),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.black.withAlpha((0.15 * 255).toInt()),
+                              color: Colors.black.withAlpha((0.15 * 255).toInt()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -91,14 +181,12 @@ class HomeScreen extends StatelessWidget {
                                   Material(
                                     elevation: 4,
                                     borderRadius: BorderRadius.circular(12),
-                                    shadowColor: Colors.black
-                                        .withAlpha((0.15 * 255).toInt()),
+                                    shadowColor: Colors.black.withAlpha((0.15 * 255).toInt()),
                                     child: Container(
                                       width: 64,
                                       height: 64,
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.white24, width: 1.2),
+                                        border: Border.all(color: Colors.white24, width: 1.2),
                                         borderRadius: BorderRadius.circular(12),
                                         color: Colors.black,
                                       ),
@@ -123,8 +211,7 @@ class HomeScreen extends StatelessWidget {
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           podcast.title,
@@ -135,6 +222,7 @@ class HomeScreen extends StatelessWidget {
                                             fontWeight: FontWeight.w600,
                                             color: Colors.white,
                                             fontSize: 16,
+                                            fontFamily: 'Oswald',
                                           ),
                                         ),
                                         const SizedBox(height: 6),
@@ -146,6 +234,7 @@ class HomeScreen extends StatelessWidget {
                                           style: const TextStyle(
                                             color: Colors.white70,
                                             fontSize: 14,
+                                            fontFamily: 'Oswald',
                                           ),
                                         ),
                                       ],

@@ -73,7 +73,7 @@ class PodcastApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
-          '/home': (context) => AppScaffold(child: HomeScreen()),
+          '/home': (context) => const AppScaffold(child: HomeScreen()),
           '/podcast': (context) {
             final podcast =
                 ModalRoute.of(context)!.settings.arguments as Podcast;

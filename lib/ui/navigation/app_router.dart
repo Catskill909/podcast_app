@@ -11,7 +11,7 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-            builder: (_) => AppScaffold(child: HomeScreen()));
+            builder: (_) => const AppScaffold(child: HomeScreen()));
       case '/podcast':
         final podcast = settings.arguments as Podcast;
         return MaterialPageRoute(
@@ -23,7 +23,7 @@ class AppRouter {
         final episode = settings.arguments as Episode;
         return MaterialPageRoute(
           builder: (_) => AppScaffold(
-              showMiniPlayer: false, child: PlayerScreen(episode: episode)),
+              showMiniPlayer: false, child: PlayerScreen(episode: episode)), 
         );
       default:
         return MaterialPageRoute(

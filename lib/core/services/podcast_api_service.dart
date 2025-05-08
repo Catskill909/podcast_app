@@ -15,13 +15,14 @@ class PodcastApiService {
       if (node is XmlText) buffer.write(node.value);
       if (node is XmlCDATA) buffer.write(node.value);
     }
-    // Fallback: if still empty, try .text or .innerText
+    // Fallback: if still empty, try .innerText
     final result = buffer.toString().trim();
     if (result.isNotEmpty) return result;
     
     // More aggressive extraction for elements with CDATA or complex content
     final directText = element.innerText.trim();
-    return directText.isNotEmpty ? directText : element.text.trim();
+    return directText.isNotEmpty ? directText : '';
+
   }
 
   Future<List<Podcast>> fetchPodcasts() async {
