@@ -2,6 +2,9 @@
 
 ## Staged Development & Testing Plan
 
+**Note:** The caching/network layer will be designed to support future episode downloads. Placeholders or refactors may be added to ensure extensibility for downloads and advanced offline features.
+
+
 Our goal: best-in-class reliability, offline support, and user experience for a modern podcasting app. We will deliver this in safe, testable stages:
 
 **Stage 1: Local Caching**

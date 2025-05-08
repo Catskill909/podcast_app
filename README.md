@@ -196,6 +196,10 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ## Roadmap: Best-in-Class Podcast App Network & Offline Experience
 
+### Extensibility for Downloads
+Our cache and network layer is being architected to support not only feed caching and offline playback, but also robust episode downloads in the future. Download logic, storage, and offline playback will build on this unified infrastructure. As we proceed, we may add placeholders or refactor current code to ensure extensibility for downloads and other advanced features.
+
+
 Our next major goal: deliver the best solution for a modern podcasting app—reliable, offline-ready, and seamless. Staged, testable development:
 
 **Stage 1: Local Caching**
