@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 // ignore_for_file: prefer_const_constructors
 import '../../core/services/podcast_api_service.dart';
 import '../../core/models/podcast.dart';
@@ -135,9 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'Podcasts',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontFamily: 'Oswald',
-                    color: Colors.white,
+                  style: GoogleFonts.oswald(
+                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
