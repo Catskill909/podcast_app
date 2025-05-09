@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-enum NetworkStatus { online, offline }
+enum NetworkStatus { initializing, online, offline }
 
 class ConnectivityProvider extends ChangeNotifier {
   final Connectivity _connectivity = Connectivity();
-  NetworkStatus _status = NetworkStatus.offline;
+  NetworkStatus _status = NetworkStatus.initializing;
   NetworkStatus get status => _status;
 
   ConnectivityProvider() {

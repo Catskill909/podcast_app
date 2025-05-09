@@ -157,22 +157,24 @@ Podcast image: ${widget.episode.podcastImageUrl}
                                         onPressed: () {
                                           final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
                                           if (!audioProvider.isPlaying) {
-                                            if (connectivityProvider.status == NetworkStatus.offline) {
+                                            if (connectivityProvider.status == NetworkStatus.offline) { // Explicitly check for offline
                                               ScaffoldMessenger.of(context).showSnackBar(
-                                                buildNoConnectionSnackBar(
+                                                buildNoConnectionSnackBar( 
                                                   context,
-                                                  widget.episode.title,
-                                                  () {
+                                                  widget.episode.title, 
+                                                  () { 
                                                     if (connectivityProvider.status != NetworkStatus.offline) {
-                                                      audioProvider.setCurrentEpisode(widget.episode);
+                                                      audioProvider.setCurrentEpisode(widget.episode); 
                                                       audioProvider.play(); 
                                                     }
                                                   },
                                                 ),
                                               );
-                                            } else {
+                                            } else if (connectivityProvider.status == NetworkStatus.online) { // Only play if online
                                                audioProvider.play();
                                             }
+                                            // If status is NetworkStatus.initializing, do nothing, preventing the flash.
+                                            // User can tap again shortly.
                                           } else {
                                              audioProvider.pause();
                                           }
