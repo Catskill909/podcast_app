@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import '../../core/models/episode.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/audio_provider.dart';
+import '../../core/providers/connectivity_provider.dart';
+
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:html/dom.dart' as dom;
+import '../widgets/mini_player.dart'; // Import for buildNoConnectionSnackBar
 
 class PlayerScreen extends StatefulWidget {
   final Episode episode;
@@ -33,7 +36,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('The Pacifica Evening News'),
@@ -63,194 +65,183 @@ Podcast image: ${widget.episode.podcastImageUrl}
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(0),
-                          ),
-                          child: (widget.episode.imageUrl.isNotEmpty)
-                              ? Image.network(
-                                  widget.episode.imageUrl,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 240,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  'assets/images/pacifica-news.png',
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 240,
-                                  fit: BoxFit.cover,
-                                ),
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(0),
                         ),
-
-
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          height: 160, // covers the whole text area
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: [0.0, 0.6, 1.0],
-                                colors: [
-                                  Colors.transparent,
-                                  Color(0xCC000000), // 80% black
-                                  Color(0xF7000000), // 97% black
-                                ],
+                        child: (widget.episode.imageUrl.isNotEmpty)
+                            ? Image.network(
+                                widget.episode.imageUrl,
+                                width: MediaQuery.of(context).size.width,
+                                height: 240,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/pacifica-news.png',
+                                width: MediaQuery.of(context).size.width,
+                                height: 240,
+                                fit: BoxFit.cover,
                               ),
-                            ),
+                      ),
+                      Positioned(
+                        left: 20,
+                        right: 20,
+                        bottom: 32,
+                        child: Text(
+                          widget.episode.title,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontFamily: 'Oswald',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15,
+                            shadows: const [
+                              Shadow(
+                                blurRadius: 10,
+                                color: Colors.black87,
+                                offset: Offset(0, 2),
+                              ),
+                              Shadow(
+                                blurRadius: 16,
+                                color: Colors.black54,
+                                offset: Offset(0, 6),
+                              ),
+                            ],
                           ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        Positioned(
-                          left: 20,
-                          right: 20,
-                          bottom: 32,
-                          child: Text(
-                            widget.episode.title,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontFamily: 'Oswald',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15,
-                              shadows: const [
-                                Shadow(
-                                  blurRadius: 10,
-                                  color: Colors.black87,
-                                  offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Consumer<AudioProvider>(
+                    builder: (context, audioProvider, child) {
+                      final mediaItem = audioProvider.audioHandler.mediaItem.value;
+                      final totalDuration = mediaItem?.duration ?? Duration.zero;
+                      final sliderMax = totalDuration.inSeconds.toDouble();
+
+                      return StreamBuilder<Duration>(
+                        stream: audioProvider.positionStream,
+                        initialData: audioProvider.position,
+                        builder: (context, snapshot) {
+                          final isCompleted = audioProvider.isCompleted;
+                          final position = isCompleted ? Duration.zero : (snapshot.data ?? Duration.zero);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Column(
+                              children: [
+                                Slider(
+                                  value: position.inSeconds.toDouble().clamp(0.0, sliderMax),
+                                  min: 0,
+                                  max: sliderMax > 0 ? sliderMax : 1.0,
+                                  activeColor: Colors.white,
+                                  inactiveColor: Colors.white24,
+                                  thumbColor: Colors.white,
+                                  onChanged: (value) {
+                                    audioProvider.seek(Duration(seconds: value.toInt()));
+                                  },
                                 ),
-                                Shadow(
-                                  blurRadius: 16,
-                                  color: Colors.black54,
-                                  offset: Offset(0, 6),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(_formatDuration(position)),
+                                    Text(_formatDuration(totalDuration)),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.replay_10),
+                                      iconSize: 36,
+                                      onPressed: () {
+                                        audioProvider.seek(position - const Duration(seconds: 10));
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        audioProvider.isPlaying
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                      ),
+                                      iconSize: 56,
+                                      onPressed: () {
+                                        final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
+                                        if (!audioProvider.isPlaying) {
+                                          if (connectivityProvider.status == NetworkStatus.offline) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              buildNoConnectionSnackBar(
+                                                context,
+                                                widget.episode.title,
+                                                () {
+                                                  final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
+                                                  final audioProvider = Provider.of<AudioProvider>(context, listen: false);
+                                                  if (connectivityProvider.status != NetworkStatus.offline) {
+                                                    audioProvider.setCurrentEpisode(widget.episode);
+                                                    audioProvider.play();
+                                                  } else {
+                                                    // Still offline. User can tap retry on SnackBar again or main play button.
+                                                    // No need to show another SnackBar from here.
+                                                  }
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            audioProvider.play();
+                                          }
+                                        } else {
+                                          audioProvider.pause();
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.forward_10),
+                                      iconSize: 36,
+                                      onPressed: () { audioProvider.seek(position + const Duration(seconds: 10)); }
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
+                          ); // Closes Padding for Slider/Controls
+                        }, // Closes StreamBuilder builder
+                      ); // Closes StreamBuilder
+                    }, // Closes Consumer builder
+                  ), // Closes Consumer
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: SingleChildScrollView(
+                        child: Html(
+                          data: _styledHtmlContent(
+                            widget.episode.contentHtml?.isNotEmpty == true
+                                ? widget.episode.contentHtml!
+                                : widget.episode.description,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Consumer<AudioProvider>(
-                      builder: (context, audioProvider, child) {
-                        final isPlaying = audioProvider.isPlaying;
-                        final isCompleted = audioProvider.isCompleted;
-                        final position = isCompleted ? Duration.zero : audioProvider.position;
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.replay_10),
-                              iconSize: 36,
-                              onPressed: () => audioProvider
-                                  .seek(position - const Duration(seconds: 10)),
+                          style: {
+                            "body": Style(
+                              color: Colors.white.withAlpha(220),
+                              fontSize: FontSize(13),
+                              fontFamily: 'Oswald',
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
                             ),
-                            const SizedBox(width: 24),
-                            IconButton(
-                              icon: Icon(
-                                  isCompleted || !isPlaying
-                                      ? Icons.play_circle_fill
-                                      : Icons.pause_circle_filled,
-                                  size: 56),
-                              iconSize: 56,
-                              onPressed: () => (isCompleted || !isPlaying)
-                                  ? audioProvider.play()
-                                  : audioProvider.pause(),
-                            ),
-                            const SizedBox(width: 24),
-                            IconButton(
-                              icon: const Icon(Icons.forward_10),
-                              iconSize: 36,
-                              onPressed: () => audioProvider
-                                  .seek(position + const Duration(seconds: 10)),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    Consumer<AudioProvider>(
-                      builder: (context, audioProvider, child) {
-                        final mediaItem =
-                            audioProvider.audioHandler.mediaItem.value;
-                        final totalDuration =
-                            mediaItem?.duration ?? Duration.zero;
-                        final sliderMax = totalDuration.inSeconds.toDouble();
-
-                        return StreamBuilder<Duration>(
-                          stream: audioProvider.positionStream,
-                          initialData: audioProvider.position,
-                          builder: (context, snapshot) {
-                            final isCompleted = audioProvider.isCompleted;
-                            final position = isCompleted ? Duration.zero : (snapshot.data ?? Duration.zero);
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
-                              child: Column(
-                                children: [
-                                  Slider(
-                                    value: position.inSeconds
-                                        .toDouble()
-                                        .clamp(0.0, sliderMax),
-                                    min: 0,
-                                    max: sliderMax > 0 ? sliderMax : 1.0,
-                                    activeColor: Colors.white,
-                                    inactiveColor: Colors.white24,
-                                    thumbColor: Colors.white,
-                                    onChanged: (value) => audioProvider
-                                        .seek(Duration(seconds: value.toInt())),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(_formatDuration(position)),
-                                      Text(_formatDuration(totalDuration)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: SingleChildScrollView(
-                          child: Html(
-                            data: _styledHtmlContent(
-                              widget.episode.contentHtml?.isNotEmpty == true
-                                  ? widget.episode.contentHtml!
-                                  : widget.episode.description,
-                            ),
-                            style: {
-                              "body": Style(
-                                color: Colors.white.withAlpha(220),
-                                fontSize: FontSize(13),
-                                fontFamily: 'Oswald',
-                                margin: Margins.zero,
-                                padding: HtmlPaddings.zero,
-                              ),
-                              "ul": Style(margin: Margins.only(left: 12)),
-                              "ol": Style(margin: Margins.only(left: 12)),
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-  }
+                            "ul": Style(margin: Margins.only(left: 12)),
+                            "ol": Style(margin: Margins.only(left: 12)),
+                          }, // Close the style map for Html
+                        ),   // Close Html()
+                      ),     // Close SingleChildScrollView()
+                    ),       // Close Padding() for Html content
+                  ),         // Close Expanded() for the Html content section
+                ], // Closes children of the main Column
+              )   // Closes main Column
+            )     // Closes SafeArea
+    ); // Closes Scaffold body
+  } // Closes build method
 
   String _formatDuration(Duration d) {
     final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');

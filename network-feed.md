@@ -12,13 +12,39 @@ Our goal: best-in-class reliability, offline support, and user experience for a 
 - Background refresh updates cache after initial load
 - *Test:* Simulate network loss, verify cached data loads and refreshes
 
+---
+
+### Hive Caching & Offline Experience (May 2025)
+
+**Current Implementation:**
+- Hive is now used for robust local storage of podcasts and episodes.
+- The app uses a cache-first strategy: loads instantly from cache, refreshes in the background when online.
+- On first run, podcasts and episodes are fetched from the network and cached.
+- On subsequent runs (including offline), podcasts and episodes are loaded from cache.
+- If images are not available offline, a default image is shown for podcasts and episodes.
+- The player and episode screens work offline as long as audio is available (streaming requires network unless download/caching is added).
+
+**Known Limitations:**
+- Images are not cached and will not display offline (default/fallback image shown).
+- Audio playback will not work offline unless the audio file is downloaded/cached (future feature).
+- No explicit user feedback for network errors or offline state yet.
+
+**Next Steps:**
+- Add user feedback for network errors (banners, snackbars, dialogs). *(Partially addressed: Standardized "No Connection" SnackBar implemented for playback attempts)*
+- Provide retry options for failed network requests or playback. *(Addressed: "Retry" button on the "No Connection" SnackBar for playback attempts)*
+- Consider audio download/caching for true offline playback.
+- Improve image caching (e.g., using cached_network_image).
+- Enhance UI/UX: mini-player, episode queue, skip/seek controls, playback speed, sharing, and deep linking.
+
+---
+
 **Stage 2: Connectivity Monitoring**
 - Integrate connectivity_plus for online/offline detection
-- Show clear 'No Internet' messages and retry options
+- Show clear 'No Internet' messages and retry options *(Implemented for playback scenarios via standardized "No Connection" SnackBar with retry)*
 - *Test:* Toggle connectivity, verify UI feedback and network checks
 
 **Stage 3: Full Offline Support**
-- Always show cached data when offline; indicate offline mode
+- Always show cached data when offline
 - *Test:* Run app offline, verify full experience with cached data
 
 **Stage 4: Advanced Error Handling**

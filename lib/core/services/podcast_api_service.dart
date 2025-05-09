@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
+import 'package:hive/hive.dart';
 import '../models/podcast.dart';
 import '../models/episode.dart';
 
@@ -26,15 +27,43 @@ class PodcastApiService {
   }
 
   Future<List<Podcast>> fetchPodcasts() async {
+    final box = Hive.box<Podcast>('podcasts');
+    // print('[PodcastApiService] Checking cache...');
+    // Try cache first
+    if (box.isNotEmpty) {
+      // print('[PodcastApiService] Loaded podcasts from cache.');
+      final cached = box.values.toList();
+      // Start background refresh
+      _refreshPodcastsInBackground();
+      return cached;
+    } else {
+      // print('[PodcastApiService] Cache empty, fetching from network...');
+      // No cache, fetch from network
+      final podcasts = await _fetchAndCacheFromNetwork(box);
+      // print('[PodcastApiService] Podcasts from network: count=${podcasts.length}');
+      return podcasts;
+    }
+  }
+
+  void _refreshPodcastsInBackground() async {
+    final box = Hive.box<Podcast>('podcasts');
     try {
-      final start = DateTime.now();
-      // ignore: avoid_print
-      print('[fetchPodcasts] Start: ${start.toIso8601String()}');
-      final responseStart = DateTime.now();
-      // ignore: avoid_print
-      print('[fetchPodcasts] Before HTTP request: ${responseStart.difference(start).inMilliseconds} ms');
+      // print('[PodcastApiService] Background refresh started.');
+      await _fetchAndCacheFromNetwork(box);
+      // print('[PodcastApiService] Background refresh complete.');
+      // Optionally notify listeners/UI if needed
+    } catch (e) {
+      // print('[PodcastApiService] Background refresh error: $e');
+    }
+  }
+
+  Future<List<Podcast>> _fetchAndCacheFromNetwork(Box<Podcast> box) async {
+    try {
+      // print('[PodcastApiService] Fetching from network...');
       final response = await http.get(Uri.parse(kpfaFeedUrl));
+      // print('[PodcastApiService] HTTP status: ${response.statusCode}');
       if (response.statusCode != 200) {
+        // print('[PodcastApiService] Network error: status ${response.statusCode}');
         throw Exception('Failed to load KPFA feed');
       }
       final xmlDoc = XmlDocument.parse(response.body);
@@ -55,19 +84,15 @@ class PodcastApiService {
         category: channel.getElement('itunes:category')?.getAttribute('text'),
         explicitTag: getXmlText(channel.getElement('itunes:explicit')),
         episodes: channel.findElements('item').map((item) {
-          // Make sure we get the real title, not the iTunes title
           final episodeTitle = getXmlText(item.getElement('title'));
           final episodeDescription = getXmlText(item.getElement('description'));
           final episodeSummary = getXmlText(item.getElement('itunes:summary'));
-          final episodeContentHtml =
-              getXmlText(item.getElement('content:encoded'));
+          final episodeContentHtml = getXmlText(item.getElement('content:encoded'));
           final episodeGuid = getXmlText(item.getElement('guid'));
-          final episodeExplicitTag =
-              getXmlText(item.getElement('itunes:explicit'));
+          final episodeExplicitTag = getXmlText(item.getElement('itunes:explicit'));
           final episodePubDate = getXmlText(item.getElement('pubDate'));
           final enclosure = item.getElement('enclosure');
-          final imageUrl =
-              item.getElement('itunes:image')?.getAttribute('href') ?? '';
+          final imageUrl = item.getElement('itunes:image')?.getAttribute('href') ?? '';
           final durationStr = getXmlText(item.getElement('itunes:duration'));
           final duration = _parseDuration(durationStr);
           return Episode(
@@ -79,25 +104,26 @@ class PodcastApiService {
             description: episodeDescription,
             summary: episodeSummary,
             contentHtml: episodeContentHtml,
-            imageUrl: (imageUrl.isNotEmpty
-                    ? imageUrl
-                    : channel
-                        .getElement('itunes:image')
-                        ?.getAttribute('href')) ??
-                '',
-            podcastImageUrl:
-                channel.getElement('itunes:image')?.getAttribute('href') ?? '',
+            imageUrl: (imageUrl.isNotEmpty ? imageUrl : channel.getElement('itunes:image')?.getAttribute('href')) ?? '',
+            podcastImageUrl: channel.getElement('itunes:image')?.getAttribute('href') ?? '',
             duration: duration,
             pubDate: _parsePubDate(episodePubDate),
             explicitTag: episodeExplicitTag,
           );
         }).toList(),
       );
+      // print('[PodcastApiService] Parsed podcast: title=${podcast.title}, episodes=${podcast.episodes.length}');
+      // Clear and update cache
+      await box.clear();
+      await box.add(podcast);
+      // print('[PodcastApiService] Podcast cached.');
       return [podcast];
     } catch (e) {
+      // print('[PodcastApiService] ERROR: $e');
       return [];
     }
   }
+
 
   Duration _parseDuration(String? input) {
     if (input == null) return Duration.zero;

@@ -6,6 +6,13 @@ A modern, minimal, and slick Flutter podcasting app.
 
 ## Features
 
+### Modern Local Caching (Hive)
+- Podcasts, episodes, and playback UI are available offline after first load.
+- Uses Hive for robust local storage of podcast and episode data.
+- Cache-first strategy: loads instantly from cache, refreshes in background when online.
+- If offline, app loads cached podcasts and episodes. Default images are shown if network images are unavailable.
+
+
 - **Modern UI:** Minimalist design, Material 3, Google Fonts, responsive layouts
 - **Podcast Browser:** Home screen with a list of podcasts 
 - **Podcast Detail:** View podcast description and list of episodes
@@ -21,6 +28,7 @@ A modern, minimal, and slick Flutter podcasting app.
 - **Interim Dart Splash:** Custom Dart splash screen for a seamless transition after the native splash, matching icon size and background for a professional look
 - **Google Fonts:** No manual font assets required
 - **Ready for API:** PodcastApiService is abstracted for easy backend integration
+- **Consistent In-App Notifications:** Standardized SnackBar for connectivity errors, ensuring visibility above the mini-player with clear messaging and retry options.
 
 ---
 
@@ -30,18 +38,22 @@ A modern, minimal, and slick Flutter podcasting app.
 - [`audio_service`](https://pub.dev/packages/audio_service): Background audio, lockscreen & notification controls, system/media button support
 - [`audio_session`](https://pub.dev/packages/audio_session): Audio focus and session management
 - [`provider`](https://pub.dev/packages/provider): State management
+- [`http`](https://pub.dev/packages/http): Network requests for fetching podcast feeds
+- [`xml`](https://pub.dev/packages/xml): XML parsing for RSS feeds
+- [`html`](https://pub.dev/packages/html): HTML parsing (used by flutter_html and for descriptions)
+- [`flutter_html`](https://pub.dev/packages/flutter_html): Renders HTML content for episode descriptions
+- [`hive`](https://pub.dev/packages/hive): Fast, lightweight NoSQL database for local caching
+- [`hive_flutter`](https://pub.dev/packages/hive_flutter): Flutter helpers for Hive
+- [`connectivity_plus`](https://pub.dev/packages/connectivity_plus): Checks network connectivity status
 - [`google_fonts`](https://pub.dev/packages/google_fonts): Dynamic font loading
-- [`cached_network_image`](https://pub.dev/packages/cached_network_image): Efficient image loading
-- [`shared_preferences`](https://pub.dev/packages/shared_preferences): Local storage for favorites
-- [`get_it`](https://pub.dev/packages/get_it): Dependency injection
-- [`flutter_hooks`](https://pub.dev/packages/flutter_hooks): Cleaner stateful widgets
-- [`url_launcher`](https://pub.dev/packages/url_launcher): URL handling and external link support
-- [`flutter_social_button`](https://pub.dev/packages/flutter_social_button): Social media sharing buttons
-- [`share_plus`](https://pub.dev/packages/share_plus): Native sharing functionality for episodes and podcasts
-- [`font_awesome_flutter`](https://pub.dev/packages/font_awesome_flutter): Icon set for UI elements
-- [`http`](https://pub.dev/packages/http): API calls (for future backend)
-- [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons): App icon generation
-- [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash): Splash screen generation
+- [`cached_network_image`](https://pub.dev/packages/cached_network_image): Efficient image loading and caching
+- [`shared_preferences`](https://pub.dev/packages/shared_preferences): Simple local storage (e.g., for user preferences, can be used for favorites)
+- [`get_it`](https://pub.dev/packages/get_it): Dependency injection / Service locator
+- [`flutter_hooks`](https://pub.dev/packages/flutter_hooks): Cleaner stateful widget logic
+- [`url_launcher`](https://pub.dev/packages/url_launcher): Launching URLs in external apps/browsers
+- [`share_plus`](https://pub.dev/packages/share_plus): Native sharing functionality
+- [`font_awesome_flutter`](https://pub.dev/packages/font_awesome_flutter): Additional icon set
+- [`flutter_social_button`](https://pub.dev/packages/flutter_social_button): Pre-styled social media buttons (if used)
 
 ---
 
@@ -75,6 +87,24 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 - Add more providers or migrate to Riverpod for advanced state management
 - Add more features: downloads, playlists, user profiles, recommendations, etc.
 - All lints and warnings are actively managed for clean development
+
+---
+
+## 2025-05-09: Development Session Summary
+
+### UI/UX Enhancements - SnackBar Consistency
+- **Global SnackBar Theming:**
+  - Established a global `SnackBarThemeData` in `main.dart` to ensure all SnackBars default to `SnackBarBehavior.floating` with a consistent rounded shape.
+- **Standardized "No Connection" SnackBar:**
+  - Implemented a reusable `buildNoConnectionSnackBar` function.
+  - This SnackBar provides a consistent message, "Offline" icon, and a "Retry" button.
+  - Features a crucial `margin` with `bottom: 80.0` to ensure it always displays above the mini-player, enhancing visibility.
+- **Consistent Application Across Screens:**
+  - The `MiniPlayer` now uses this standardized SnackBar when a user attempts to play content while offline.
+  - The `PlayerScreen` (both main play button and refresh button) also utilizes this SnackBar for offline scenarios.
+- **Improved Retry Logic:**
+  - The "Retry" button on the SnackBar correctly attempts to play the episode by calling `setCurrentEpisode()` and `play()` on the `AudioProvider`.
+  - Simplified the UX to prevent cascading SnackBars on repeated offline retries.
 
 ---
 
@@ -194,7 +224,16 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ---
 
-## Roadmap: Best-in-Class Podcast App Network & Offline Experience
+## Roadmap
+
+### Next Steps
+- Add user feedback for network errors (e.g., banners, snackbars, or dialogs when offline or playback fails).
+- Provide retry options for failed network requests or playback.
+- Consider audio download/caching for true offline playback.
+- Improve image caching (e.g., using cached_network_image).
+- Enhance UI/UX: mini-player, episode queue, skip/seek controls, playback speed, sharing, and deep linking.
+
+### Best-in-Class Podcast App Network & Offline Experience
 
 ### Extensibility for Downloads
 Our cache and network layer is being architected to support not only feed caching and offline playback, but also robust episode downloads in the future. Download logic, storage, and offline playback will build on this unified infrastructure. As we proceed, we may add placeholders or refactor current code to ensure extensibility for downloads and other advanced features.
@@ -213,7 +252,7 @@ Our next major goal: deliver the best solution for a modern podcasting app—rel
 - *Test:* Toggle connectivity, verify UI feedback
 
 **Stage 3: Full Offline Support**
-- Always show cached data offline; indicate offline mode
+- Always show cached data offline
 - *Test:* Run offline, verify full cached experience
 
 **Stage 4: Advanced Error Handling**

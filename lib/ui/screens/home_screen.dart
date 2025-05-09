@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/services/podcast_api_service.dart';
 import '../../core/models/podcast.dart';
 import '../widgets/podcast_drawer.dart';
+import 'package:provider/provider.dart';
+import '../../core/providers/connectivity_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,10 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
         onTimeout: () => throw TimeoutException('Network request timed out'),
       );
     });
+    // Optionally, show a debug print if using cache
+    // (no UI change needed unless you want to show a 'Loaded from cache' indicator)
   }
 
   @override
   Widget build(BuildContext context) {
+    final networkStatus = Provider.of<ConnectivityProvider>(context).status;
     return Scaffold(
       appBar: AppBar(
         title: Stack(
@@ -58,9 +63,47 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black,
       ),
       drawer: const PodcastDrawer(),
-      body: FutureBuilder<List<Podcast>>(
-        future: _podcastFuture,
-        builder: (context, snapshot) {
+      body: Column(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            child: networkStatus == NetworkStatus.offline
+                ? MaterialBanner(
+                    key: const ValueKey('offline-banner'),
+                    backgroundColor: Colors.grey[900]!.withAlpha(230),
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    leading: Icon(Icons.wifi_off, color: Colors.redAccent.withAlpha(200), size: 32),
+                    content: Text(
+                      'You are offline. Some features may be unavailable.',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontFamily: 'Oswald',
+                            color: Colors.white,
+                          ) ?? const TextStyle(
+                            fontFamily: 'Oswald',
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                    ),
+                    actions: [
+                      TextButton.icon(
+                        icon: const Icon(Icons.refresh, color: Colors.white),
+                        label: Text('Retry', style: GoogleFonts.oswald(color: Colors.white)),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.redAccent.withAlpha(60),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        onPressed: _fetchWithTimeout,
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Podcast>>(
+              future: _podcastFuture,
+              builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: Column(
@@ -254,7 +297,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           );
-        },
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
