@@ -86,32 +86,34 @@ Podcast image: ${widget.episode.podcastImageUrl}
                                 fit: BoxFit.cover,
                               ),
                       ),
-                      Positioned(
-                        left: 20,
-                        right: 20,
-                        bottom: 32,
-                        child: Text(
-                          widget.episode.title,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontFamily: 'Oswald',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15,
-                            shadows: const [
-                              Shadow(
-                                blurRadius: 10,
-                                color: Colors.black87,
-                                offset: Offset(0, 2),
-                              ),
-                              Shadow(
-                                blurRadius: 16,
-                                color: Colors.black54,
-                                offset: Offset(0, 6),
-                              ),
-                            ],
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.transparent, Colors.black.withAlpha(204)],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.4, 1.0], // Gradient starts at 40% from the top
+                            ),
                           ),
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Positioned(
+                        left: 16,
+                        bottom: 16,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width - 32, // 16px padding on each side
+                          child: Text(
+                            widget.episode.title,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontFamily: 'Oswald',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ],
@@ -130,87 +132,91 @@ Podcast image: ${widget.episode.podcastImageUrl}
                           final isCompleted = audioProvider.isCompleted;
                           final position = isCompleted ? Duration.zero : (snapshot.data ?? Duration.zero);
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Slider(
-                                  value: position.inSeconds.toDouble().clamp(0.0, sliderMax),
-                                  min: 0,
-                                  max: sliderMax > 0 ? sliderMax : 1.0,
-                                  activeColor: Colors.white,
-                                  inactiveColor: Colors.white24,
-                                  thumbColor: Colors.white,
-                                  onChanged: (value) {
-                                    audioProvider.seek(Duration(seconds: value.toInt()));
-                                  },
-                                ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(_formatDuration(position)),
-                                    Text(_formatDuration(totalDuration)),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.replay_10),
                                       iconSize: 36,
-                                      onPressed: () {
-                                        audioProvider.seek(position - const Duration(seconds: 10));
-                                      },
+                                      color: Colors.white70,
+                                      onPressed: () { audioProvider.seek(position - const Duration(seconds: 10)); }
                                     ),
-                                    IconButton(
-                                      icon: Icon(
-                                        audioProvider.isPlaying
-                                            ? Icons.pause
-                                            : Icons.play_arrow,
-                                      ),
-                                      iconSize: 56,
-                                      onPressed: () {
-                                        final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
-                                        if (!audioProvider.isPlaying) {
-                                          if (connectivityProvider.status == NetworkStatus.offline) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              buildNoConnectionSnackBar(
-                                                context,
-                                                widget.episode.title,
-                                                () {
-                                                  final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
-                                                  final audioProvider = Provider.of<AudioProvider>(context, listen: false);
-                                                  if (connectivityProvider.status != NetworkStatus.offline) {
-                                                    audioProvider.setCurrentEpisode(widget.episode);
-                                                    audioProvider.play();
-                                                  } else {
-                                                    // Still offline. User can tap retry on SnackBar again or main play button.
-                                                    // No need to show another SnackBar from here.
-                                                  }
-                                                },
-                                              ),
-                                            );
+                                    CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 30, // iconSize is 48
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero, 
+                                        constraints: const BoxConstraints(), 
+                                        icon: Icon(audioProvider.isPlaying ? Icons.pause : Icons.play_arrow),
+                                        iconSize: 48,
+                                        color: Colors.black, // Icon color
+                                        onPressed: () {
+                                          final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
+                                          if (!audioProvider.isPlaying) {
+                                            if (connectivityProvider.status == NetworkStatus.offline) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                buildNoConnectionSnackBar(
+                                                  context,
+                                                  widget.episode.title,
+                                                  () {
+                                                    if (connectivityProvider.status != NetworkStatus.offline) {
+                                                      audioProvider.setCurrentEpisode(widget.episode);
+                                                      audioProvider.play(); 
+                                                    }
+                                                  },
+                                                ),
+                                              );
+                                            } else {
+                                               audioProvider.play();
+                                            }
                                           } else {
-                                            audioProvider.play();
+                                             audioProvider.pause();
                                           }
-                                        } else {
-                                          audioProvider.pause();
-                                        }
-                                      },
+                                        },
+                                      ),
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.forward_10),
                                       iconSize: 36,
+                                      color: Colors.white70,
                                       onPressed: () { audioProvider.seek(position + const Duration(seconds: 10)); }
                                     ),
                                   ],
                                 ),
+                                if (totalDuration > Duration.zero) ...[
+                                  const SizedBox(height: 12), 
+                                  Slider(
+                                    value: position.inSeconds.toDouble().clamp(0.0, sliderMax),
+                                    min: 0.0,
+                                    max: sliderMax > 0 ? sliderMax : 1.0,
+                                    onChanged: (value) {
+                                      audioProvider.seek(Duration(seconds: value.toInt()));
+                                    },
+                                    activeColor: Colors.white,
+                                    inactiveColor: Colors.white24,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10), 
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(_formatDuration(position), style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                                        Text(_formatDuration(totalDuration), style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
-                          ); // Closes Padding for Slider/Controls
-                        }, // Closes StreamBuilder builder
-                      ); // Closes StreamBuilder
-                    }, // Closes Consumer builder
-                  ), // Closes Consumer
+                          ); 
+                        }, 
+                      ); 
+                    }, 
+                  ), 
                   const SizedBox(height: 24),
                   Expanded(
                     child: Padding(
@@ -232,14 +238,14 @@ Podcast image: ${widget.episode.podcastImageUrl}
                             ),
                             "ul": Style(margin: Margins.only(left: 12)),
                             "ol": Style(margin: Margins.only(left: 12)),
-                          }, // Close the style map for Html
-                        ),   // Close Html()
-                      ),     // Close SingleChildScrollView()
-                    ),       // Close Padding() for Html content
-                  ),         // Close Expanded() for the Html content section
-                ], // Closes children of the main Column
-              )   // Closes main Column
-            )     // Closes SafeArea
+                          }, 
+                        ),   
+                      ),     
+                    ),       
+                  ),         
+                ], 
+              )   
+            )     
     ); // Closes Scaffold body
   } // Closes build method
 
@@ -249,12 +255,9 @@ Podcast image: ${widget.episode.podcastImageUrl}
     return '$minutes:$seconds';
   }
 
-  /// Removes <a> and <img> tags but keeps all other HTML and inner text.
   String _stripLinksAndImages(String html) {
     final document = html_parser.parse(html);
-    // Remove all <img> tags
     document.querySelectorAll('img').forEach((img) => img.remove());
-    // Replace <a> tags with their inner text
     document.querySelectorAll('a').forEach((a) {
       final text = a.text;
       final textNode = dom.Text(text);
@@ -263,7 +266,6 @@ Podcast image: ${widget.episode.podcastImageUrl}
     return document.body?.innerHtml ?? html;
   }
 
-  /// Prepends a <style> tag to force minimal list indentation.
   String _styledHtmlContent(String html) {
     const htmlListStyle = '''
 <style>
@@ -273,4 +275,4 @@ li { margin-left: 0 !important; padding-left: 0 !important; }
 ''';
     return htmlListStyle + _stripLinksAndImages(html);
   }
-}
+} // Closes _PlayerScreenState class
