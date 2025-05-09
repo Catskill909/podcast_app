@@ -6,27 +6,54 @@ A modern, minimal, and slick Flutter podcasting app.
 
 ## Features
 
-- **Offline Support:**
-  - Podcasts and episodes are available offline after first load
-  - Default images are shown if network images are unavailable
-  - Standardized offline error handling with retry options
+- **Core Functionality**
+  - Browse and discover podcasts
+  - View detailed podcast information and episode lists
+  - Play, pause, seek, and skip audio playback
+  - Control playback from anywhere in the app with the MiniPlayer
+  - Share episodes with title, description, and artwork
+  - Navigate between screens using clean, named routing
 
-- **Modern UI:** Minimalist design, Material 3, Google Fonts, responsive layouts
-- **Podcast Browser:** Home screen with a list of podcasts 
-- **Podcast Detail:** View podcast description and list of episodes
-- **Audio Playback:**
-  - Play, pause, seek, and skip audio with just_audio
-  - Modern PlayerScreen with progress slider and controls
-  - Global MiniPlayer overlay for playback control from anywhere in the app
-  - Native sharing of current episodes with title, description, and artwork
-- **State Management:** Provider for audio and playback state
-- **Favorites (stub):** Local storage service ready for favorites/bookmarks
-- **Navigation:** Clean, named routing via AppRouter
-- **Splash Screen & Launcher Icons:** Automated branding for Android/iOS
-- **Interim Dart Splash:** Custom Dart splash screen for a seamless transition after the native splash, matching icon size and background for a professional look
-- **Google Fonts:** No manual font assets required
-- **Ready for API:** PodcastApiService is abstracted for easy backend integration
-- **Consistent In-App Notifications:** Standardized SnackBar for connectivity errors, ensuring visibility above the mini-player with clear messaging and retry options
+- **Audio Features**
+  - Background audio playback
+  - Lockscreen controls
+  - Media button support
+  - Rich metadata with artwork and progress
+
+- **Technical Architecture**
+  - Modern state management with Provider
+  - Abstracted API service for easy backend integration
+  - Standardized error handling and notifications
+  - Automated branding and splash screens
+  - Dynamic font loading with Google Fonts
+
+- **Future Features (Planned)**
+  - Local storage for favorites and bookmarks
+  - Offline support for downloaded episodes
+  - Advanced caching system
+  - Custom episode queues and playlists
+
+---
+
+## Technical Details
+
+- **Current Implementation**
+  - Network-based podcast discovery and playback
+  - Basic caching of images and metadata
+  - Connectivity monitoring with retry options
+  - Standardized error handling
+
+- **Planned Enhancements**
+  - Full offline support with Hive database
+  - Episode downloading and local playback
+  - Favorite podcasts and episodes
+  - Advanced caching strategies
+
+---
+
+## Packages Used
+
+- **Core Audio & Playback**
 
 
 ---
