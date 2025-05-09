@@ -2,6 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import '../models/podcast.dart';
 import '../models/episode.dart';
 
@@ -140,11 +141,14 @@ class PodcastApiService {
   }
 
   DateTime? _parsePubDate(String? input) {
-    if (input == null) return null;
+    if (input == null || input.isEmpty) {
+      return null;
+    }
     try {
-      return DateTime.parse(input);
-    } catch (_) {
-      // Try RFC822 parsing
+      // Attempt to parse RFC 822/1123 format (e.g., "Wed, 07 May 2025 18:00:00 +0000")
+      return DateFormat("EEE, dd MMM yyyy HH:mm:ss Z", 'en_US').parseUtc(input);
+    } catch (e) {
+      // Silently return null if parsing fails. Consider logging for production if necessary.
       return null;
     }
   }

@@ -9,6 +9,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:html/dom.dart' as dom;
 import '../widgets/mini_player.dart'; // Import for buildNoConnectionSnackBar
+import 'package:intl/intl.dart'; // Add intl package import
 
 class PlayerScreen extends StatefulWidget {
   final Episode episode;
@@ -38,7 +39,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('The Pacifica Evening News'),
+        title: const Text('The Pacifica Evening News', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.share, color: Colors.white),
@@ -106,12 +107,19 @@ Podcast image: ${widget.episode.podcastImageUrl}
                           child: Text(
                             widget.episode.title,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontFamily: 'Oswald',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 15,
+                              fontFamily: 'Oswald',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 15,
+                              shadows: [
+                                const Shadow(
+                                  offset: Offset(0, 1),
+                                  blurRadius: 4.0,
+                                  color: Colors.black54,
                                 ),
-                            maxLines: 3,
+                              ],
+                            ),
+                            maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -224,32 +232,65 @@ Podcast image: ${widget.episode.podcastImageUrl}
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: SingleChildScrollView(
-                        child: Html(
-                          data: _styledHtmlContent(
-                            widget.episode.contentHtml?.isNotEmpty == true
-                                ? widget.episode.contentHtml!
-                                : widget.episode.description,
-                          ),
-                          style: {
-                            "body": Style(
-                              color: Colors.white.withAlpha(220),
-                              fontSize: FontSize(13),
-                              fontFamily: 'Oswald',
-                              margin: Margins.zero,
-                              padding: HtmlPaddings.zero,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (widget.episode.pubDate != null) ...[
+                              Builder(
+                                builder: (context) {
+                                  String formattedDate = '';
+                                  try {
+                                    formattedDate = DateFormat('MMMM d, y', 'en_US').format(widget.episode.pubDate!.toLocal());
+                                  } catch (e) {
+                                    // Error formatting pubDate, formattedDate will remain empty.
+                                    // A more robust logging solution could be implemented here if needed.
+                                  }
+                                  if (formattedDate.isNotEmpty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 12.0), // Space between date and HTML
+                                      child: Text(
+                                        formattedDate,
+                                        style: TextStyle(
+                                          color: Colors.white.withAlpha(200), // Slightly dimmer than main text
+                                          fontSize: 12,
+                                          fontFamily: 'Oswald',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox.shrink(); // Return empty if no date
+                                },
+                              ),
+                            ],
+                            Html(
+                              data: _styledHtmlContent(
+                                widget.episode.contentHtml?.isNotEmpty == true
+                                    ? widget.episode.contentHtml!
+                                    : widget.episode.description,
+                              ),
+                              style: {
+                                "body": Style(
+                                  color: Colors.white.withAlpha(220),
+                                  fontSize: FontSize(13),
+                                  fontFamily: 'Oswald',
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                ),
+                                "ul": Style(margin: Margins.only(left: 12)),
+                                "ol": Style(margin: Margins.only(left: 12)),
+                              },
                             ),
-                            "ul": Style(margin: Margins.only(left: 12)),
-                            "ol": Style(margin: Margins.only(left: 12)),
-                          }, 
-                        ),   
-                      ),     
-                    ),       
-                  ),         
-                ], 
-              )   
-            )     
-    ); // Closes Scaffold body
-  } // Closes build method
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
 
   String _formatDuration(Duration d) {
     final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -277,4 +318,4 @@ li { margin-left: 0 !important; padding-left: 0 !important; }
 ''';
     return htmlListStyle + _stripLinksAndImages(html);
   }
-} // Closes _PlayerScreenState class
+}
