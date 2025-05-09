@@ -1,6 +1,6 @@
 # Podcast App
 
-A modern, minimal, and slick Flutter podcasting app.
+A modern Flutter podcasting app.
 
 ---
 
