@@ -6,12 +6,10 @@ A modern, minimal, and slick Flutter podcasting app.
 
 ## Features
 
-### Modern Local Caching (Hive)
-- Podcasts, episodes, and playback UI are available offline after first load.
-- Uses Hive for robust local storage of podcast and episode data.
-- Cache-first strategy: loads instantly from cache, refreshes in background when online.
-- If offline, app loads cached podcasts and episodes. Default images are shown if network images are unavailable.
-
+- **Offline Support:**
+  - Podcasts and episodes are available offline after first load
+  - Default images are shown if network images are unavailable
+  - Standardized offline error handling with retry options
 
 - **Modern UI:** Minimalist design, Material 3, Google Fonts, responsive layouts
 - **Podcast Browser:** Home screen with a list of podcasts 
@@ -28,7 +26,8 @@ A modern, minimal, and slick Flutter podcasting app.
 - **Interim Dart Splash:** Custom Dart splash screen for a seamless transition after the native splash, matching icon size and background for a professional look
 - **Google Fonts:** No manual font assets required
 - **Ready for API:** PodcastApiService is abstracted for easy backend integration
-- **Consistent In-App Notifications:** Standardized SnackBar for connectivity errors, ensuring visibility above the mini-player with clear messaging and retry options.
+- **Consistent In-App Notifications:** Standardized SnackBar for connectivity errors, ensuring visibility above the mini-player with clear messaging and retry options
+
 
 ---
 
