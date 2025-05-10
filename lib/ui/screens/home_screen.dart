@@ -18,11 +18,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Podcast>> _podcastFuture;
   final PodcastApiService apiService = PodcastApiService();
+  StreamSubscription<List<Podcast>>? _podcastStreamSubscription;
 
   @override
   void initState() {
     super.initState();
     _fetchWithTimeout();
+    
+    // Listen to the stream for updates from background refresh
+    _podcastStreamSubscription = apiService.podcastsStream.listen((updatedPodcasts) {
+      // When new data is available from background refresh, update the UI
+      setState(() {
+        _podcastFuture = Future.value(updatedPodcasts);
+      });
+    });
+  }
+  
+  @override
+  void dispose() {
+    // Cancel the subscription when the widget is disposed
+    _podcastStreamSubscription?.cancel();
+    super.dispose();
   }
 
   void _fetchWithTimeout() {

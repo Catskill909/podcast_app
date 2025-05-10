@@ -118,7 +118,16 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ## 2025-05-09: Development Session Summary
 
-### UI/UX Enhancements - SnackBar Consistency
+### Automatic Feed Refresh & UI/UX Enhancements
+
+#### Fresh Content on Startup
+- **Automatic Feed Refresh:**
+  - Implemented automatic checking for fresh podcast data on every app startup
+  - Added a reactive stream-based system that updates the UI when new content is available
+  - Fixed issue where latest feed items weren't visible until manual pull-to-refresh
+  - Enhanced SplashScreen to initiate data loading during app launch
+
+#### SnackBar Consistency
 - **Global SnackBar Theming:**
   - Established a global `SnackBarThemeData` in `main.dart` to ensure all SnackBars default to `SnackBarBehavior.floating` with a consistent rounded shape.
 - **Standardized "No Connection" SnackBar:**

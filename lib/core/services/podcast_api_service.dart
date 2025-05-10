@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 import 'package:hive/hive.dart';
@@ -9,6 +10,13 @@ import '../models/episode.dart';
 class PodcastApiService {
   static const String kpfaFeedUrl =
       'https://kpfa.org/program/the-pacifica-evening-news-weekdays/feed/';
+      
+  // Stream controller to notify listeners when new data is available
+  final StreamController<List<Podcast>> _podcastsStreamController = 
+      StreamController<List<Podcast>>.broadcast();
+      
+  // Stream that UI can listen to for updates
+  Stream<List<Podcast>> get podcastsStream => _podcastsStreamController.stream;
 
   String getXmlText(XmlElement? element) {
     if (element == null) return '';
@@ -50,9 +58,13 @@ class PodcastApiService {
     final box = Hive.box<Podcast>('podcasts');
     try {
       // print('[PodcastApiService] Background refresh started.');
-      await _fetchAndCacheFromNetwork(box);
+      final podcasts = await _fetchAndCacheFromNetwork(box);
       // print('[PodcastApiService] Background refresh complete.');
-      // Optionally notify listeners/UI if needed
+      
+      // Notify listeners that new data is available
+      if (podcasts.isNotEmpty) {
+        _podcastsStreamController.add(podcasts);
+      }
     } catch (e) {
       // print('[PodcastApiService] Background refresh error: $e');
     }
