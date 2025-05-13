@@ -35,19 +35,31 @@ class PodcastApiService {
 
   }
 
-  Future<List<Podcast>> fetchPodcasts() async {
+  // Cache validity duration - consider stale after 30 minutes
+  static const cacheFreshnessDuration = Duration(minutes: 30);
+  
+  Future<List<Podcast>> fetchPodcasts({bool forceRefresh = false}) async {
     final box = Hive.box<Podcast>('podcasts');
     // print('[PodcastApiService] Checking cache...');
-    // Try cache first
-    if (box.isNotEmpty) {
+    
+    // Get the last cache timestamp
+    final lastCacheTime = await Hive.box('app_settings').get('last_podcast_fetch_time');
+    final DateTime lastFetchTime = lastCacheTime != null 
+        ? DateTime.fromMillisecondsSinceEpoch(lastCacheTime) 
+        : DateTime.fromMillisecondsSinceEpoch(0);
+    
+    final bool isCacheFresh = DateTime.now().difference(lastFetchTime) < cacheFreshnessDuration;
+    
+    // Try cache first if not forcing refresh and cache is fresh
+    if (!forceRefresh && box.isNotEmpty && isCacheFresh) {
       // print('[PodcastApiService] Loaded podcasts from cache.');
       final cached = box.values.toList();
       // Start background refresh
       _refreshPodcastsInBackground();
       return cached;
     } else {
-      // print('[PodcastApiService] Cache empty, fetching from network...');
-      // No cache, fetch from network
+      // print('[PodcastApiService] Cache empty or stale, fetching from network...');
+      // No cache, stale cache, or forced refresh - fetch from network
       final podcasts = await _fetchAndCacheFromNetwork(box);
       // print('[PodcastApiService] Podcasts from network: count=${podcasts.length}');
       return podcasts;
@@ -79,6 +91,9 @@ class PodcastApiService {
         // print('[PodcastApiService] Network error: status ${response.statusCode}');
         throw Exception('Failed to load KPFA feed');
       }
+      
+      // Update the last fetch timestamp
+      await Hive.box('app_settings').put('last_podcast_fetch_time', DateTime.now().millisecondsSinceEpoch);
       final xmlDoc = XmlDocument.parse(response.body);
       final channel = xmlDoc.findAllElements('channel').first;
       final podcast = Podcast(

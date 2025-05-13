@@ -21,6 +21,7 @@ void main() async {
   Hive.registerAdapter(PodcastAdapter());
   Hive.registerAdapter(EpisodeAdapter());
   await Hive.openBox<Podcast>('podcasts');
+  await Hive.openBox('app_settings');
   final audioHandler = await initPodcastAudioHandler() as PodcastAudioHandler;
   runApp(
     ChangeNotifierProvider(

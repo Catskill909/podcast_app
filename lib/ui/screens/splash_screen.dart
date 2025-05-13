@@ -21,9 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeAppAndNavigate() async {
     // Start loading data immediately on app startup
     try {
-      // This will either load from cache and trigger a background refresh,
-      // or fetch from network if cache is empty
-      await _apiService.fetchPodcasts();
+      // Force a refresh to get the latest data when app starts
+      // This ensures we always have the latest content when opening the app
+      await _apiService.fetchPodcasts(forceRefresh: true);
     } catch (e) {
       // If there's an error, we'll still navigate to home screen
       // where the error handling UI will be shown

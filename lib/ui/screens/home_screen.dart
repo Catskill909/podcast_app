@@ -41,15 +41,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _fetchWithTimeout() {
+  void _fetchWithTimeout({bool forceRefresh = false}) {
     setState(() {
-      _podcastFuture = apiService.fetchPodcasts().timeout(
+      _podcastFuture = apiService.fetchPodcasts(forceRefresh: forceRefresh).timeout(
         const Duration(seconds: 10),
         onTimeout: () => throw TimeoutException('Network request timed out'),
       );
     });
-    // Optionally, show a debug print if using cache
-    // (no UI change needed unless you want to show a 'Loaded from cache' indicator)
   }
 
   @override
@@ -117,9 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 : const SizedBox.shrink(),
           ),
           Expanded(
-            child: FutureBuilder<List<Podcast>>(
-              future: _podcastFuture,
-              builder: (context, snapshot) {
+            child: RefreshIndicator(
+              onRefresh: () async {
+                _fetchWithTimeout(forceRefresh: true);
+                return;
+              },
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Colors.grey[900],
+              child: FutureBuilder<List<Podcast>>(
+                future: _podcastFuture,
+                builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: Column(
@@ -313,7 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           );
-              },
+                },
+              ),
             ),
           ),
         ],

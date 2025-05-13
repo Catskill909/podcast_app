@@ -42,6 +42,9 @@ A modern Flutter podcasting app.
   - Basic caching of images and metadata
   - Connectivity monitoring with retry options
   - Standardized error handling
+  - **Automatic cache refresh:** On app launch, the app now always fetches the latest podcast feed from the network (unless offline), ensuring new episodes appear as soon as they are available in the feed. Cached data is considered stale after 30 minutes and will be refreshed automatically.
+  - **Pull-to-refresh:** Users can manually refresh the podcast list or episode details at any time using the standard pull-to-refresh gesture, which will always fetch the latest data from the API.
+  - **Cache freshness logic:** The app uses a simple timestamp system (stored in Hive) to determine when cached podcast data should be considered stale. This ensures the UI is always up-to-date without excessive network requests.
 
 - **Planned Enhancements**
   - Full offline support with Hive database
@@ -108,6 +111,10 @@ This app uses [`audio_service`](https://pub.dev/packages/audio_service) to provi
 
 ## Future AI/Developer Notes
 
+- **Podcast feed auto-update logic:**
+  - On app startup, the splash screen forces a refresh of the podcast feed from the network, bypassing the cache. This guarantees that if a new episode is published in the RSS feed, it will appear in the app without requiring a manual refresh.
+  - The cache is considered fresh for 30 minutes. If the cache is older, or the user pulls to refresh, a new network request is made and the cache timestamp is updated.
+  - All screens (home, detail) now use the same cache and refresh logic for consistency.
 - All services and models are designed for easy extension (API, favorites, downloads, etc.)
 - Add more API feeds
 - Add more providers or migrate to Riverpod for advanced state management

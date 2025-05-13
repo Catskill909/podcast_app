@@ -24,7 +24,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
 
   Future<void> _refreshPodcastDetails() async {
     try {
-      List<Podcast> refreshedPodcasts = await _apiService.fetchPodcasts();
+      List<Podcast> refreshedPodcasts = await _apiService.fetchPodcasts(forceRefresh: true);
       Podcast? updatedPodcast = refreshedPodcasts.firstWhere(
         (p) => p.id == _currentPodcast.id,
         orElse: () {
